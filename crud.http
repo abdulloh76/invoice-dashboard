@@ -1,0 +1,28 @@
+@rootUrl = http://localhost:8080
+
+get {{rootUrl}}/invoice
+
+###
+get {{rootUrl}}/invoice/qwe123
+
+###
+post {{rootUrl}}/invoice
+Content-Type: application/json
+
+{
+  "id": "dfg123",
+  "name": "tax for salary",
+  "price": 438
+}
+
+###
+put {{rootUrl}}/invoice/qwe123
+Content-Type: application/json
+
+{
+  "id": "qwe123",
+  "name": "tax for salary",
+  "price": 438
+}
+###
+delete {{rootUrl}}/invoice/asd123
