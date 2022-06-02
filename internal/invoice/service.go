@@ -11,10 +11,38 @@ type Response struct {
 }
 
 var invoices []entity.Invoice = []entity.Invoice{
-	{ID: "qwe123", Name: "tax for water", Price: 45},
-	{ID: "asd123", Name: "tax for gas", Price: 55},
-	{ID: "zxc123", Name: "tax for electricity", Price: 60},
-	{ID: "wer123", Name: "college payment", Price: 354},
+	{
+		ID:           "RT3080",
+		CreatedAt:    "2021-08-18",
+		PaymentDue:   "2021-08-19",
+		Description:  "Re-branding",
+		PaymentTerms: 1,
+		ClientName:   "Jensen Huang",
+		ClientEmail:  "jensenh@mail.com",
+		Status:       "paid",
+		SenderAddress: entity.Address{
+			Street:   "19 Union Terrace",
+			City:     "London",
+			PostCode: "E1 3EZ",
+			Country:  "United Kingdom",
+		},
+		ClientAddress: entity.Address{
+
+			Street:   "106 Kendell Street",
+			City:     "Sharrington",
+			PostCode: "NR24 5WQ",
+			Country:  "United Kingdom",
+		},
+		Items: []entity.Item{
+			{
+				Name:     "Brand Guidelines",
+				Quantity: 1,
+				Price:    1800.90,
+				Total:    1800.90,
+			},
+		},
+		Total: 1800.90,
+	},
 }
 
 func CreateInvoice(context *gin.Context) {

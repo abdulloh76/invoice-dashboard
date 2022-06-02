@@ -1,28 +1,82 @@
 @rootUrl = http://localhost:8080
+# @rootUrl = https://serene-plains-38345.herokuapp.com
 
 get {{rootUrl}}/invoice
 
 ###
-get {{rootUrl}}/invoice/qwe123
+get {{rootUrl}}/invoice/RT3080
 
 ###
 post {{rootUrl}}/invoice
 Content-Type: application/json
 
 {
-  "id": "dfg123",
-  "name": "tax for salary",
-  "price": 438
+	"id": "RT2180",
+	"createdAt": "2021-08-18",
+	"paymentDue": "2021-08-19",
+	"description": "Re-branding",
+	"paymentTerms": 1,
+	"clientName": "John Wick",
+	"clientEmail": "johnwick@mail.com",
+	"status": "paid",
+	"senderAddress": {
+		"street": "19 Brooklyn",
+		"city": "New York",
+		"postCode": "E1 3EZ",
+		"country": "USA"
+	},
+	"clientAddress": {
+		"street": "106 Kendell Street",
+		"city": "Sharrington",
+		"postCode": "NR24 5WQ",
+		"country": "United Kingdom"
+	},
+	"items": [
+		{
+			"name": "Brand Guidelines",
+			"quantity": 1,
+			"price": 1800.90,
+			"total": 1800.90
+		}
+	],
+	"total": 1800.90
 }
 
 ###
-put {{rootUrl}}/invoice/qwe123
+put {{rootUrl}}/invoice/RT2180
 Content-Type: application/json
 
 {
-  "id": "qwe123",
-  "name": "tax for salary",
-  "price": 438
+	"id": "RT2180",
+	"createdAt": "2021-08-18",
+	"paymentDue": "2021-08-19",
+	"description": "Re-branding",
+	"paymentTerms": 1,
+	"clientName": "John Wick",
+	"clientEmail": "johnwick@mail.com",
+	"status": "unpaid",
+	"senderAddress": {
+		"street": "19 Brooklyn",
+		"city": "New York",
+		"postCode": "E1 3EZ",
+		"country": "USA"
+	},
+	"clientAddress": {
+		"street": "106 Kendell Street",
+		"city": "Sharrington",
+		"postCode": "NR24 5WQ",
+		"country": "United Kingdom"
+	},
+	"items": [
+		{
+			"name": "Brand Guidelines",
+			"quantity": 1,
+			"price": 1800.90,
+			"total": 1800.90
+		}
+	],
+	"total": 1800.90
 }
+
 ###
-delete {{rootUrl}}/invoice/asd123
+delete {{rootUrl}}/invoice/RT3080

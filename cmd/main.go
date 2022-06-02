@@ -1,12 +1,19 @@
 package main
 
 import (
+	"invoice-dashboard/config"
 	"invoice-dashboard/internal/invoice"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	config, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
 	router := gin.Default()
 
 	//run database
@@ -15,5 +22,5 @@ func main() {
 	//routes
 	invoice.RegisterHandlers(router)
 
-	router.Run("localhost:8080")
+	router.Run(":" + config.PORT)
 }
