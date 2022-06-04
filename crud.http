@@ -4,15 +4,13 @@
 get {{rootUrl}}/invoice
 
 ###
-get {{rootUrl}}/invoice/RT3080
+get {{rootUrl}}/invoice/3080
 
 ###
 post {{rootUrl}}/invoice
 Content-Type: application/json
 
 {
-	"id": "RT2180",
-	"createdAt": "2021-08-18",
 	"paymentDue": "2021-08-19",
 	"description": "Re-branding",
 	"paymentTerms": 1,
@@ -43,12 +41,10 @@ Content-Type: application/json
 }
 
 ###
-put {{rootUrl}}/invoice/RT2180
+put {{rootUrl}}/invoice/2180
 Content-Type: application/json
 
 {
-	"id": "RT2180",
-	"createdAt": "2021-08-18",
 	"paymentDue": "2021-08-19",
 	"description": "Re-branding",
 	"paymentTerms": 1,
@@ -79,4 +75,4 @@ Content-Type: application/json
 }
 
 ###
-delete {{rootUrl}}/invoice/RT3080
+delete {{rootUrl}}/invoice/3080

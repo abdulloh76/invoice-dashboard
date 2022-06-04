@@ -1,23 +1,34 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"log"
 
-type EnvVariables struct {
-	PORT string
+	"github.com/spf13/viper"
+)
+
+var (
+	EnvVariables ConfigVariables
+)
+
+type ConfigVariables struct {
+	PORT                string
+	POSTGRES_URI        string
+	DOCKER_POSTGRES_URI string
 }
 
-func LoadConfig(path string) (envs EnvVariables, err error) {
+func LoadConfig(path string) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
-	viper.SetConfigType("env")
+	viper.SetConfigFile(".env")
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 	if err != nil {
-		return
+		log.Fatal("cannot load config:", err)
 	}
-
-	err = viper.Unmarshal(&envs)
-	return
+	err = viper.Unmarshal(&EnvVariables)
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+	// how to set env variable before compiling golang app
 }

@@ -3,24 +3,20 @@ package main
 import (
 	"invoice-dashboard/config"
 	"invoice-dashboard/internal/invoice"
-	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	config, err := config.LoadConfig(".")
-	if err != nil {
-		log.Fatal("cannot load config:", err)
-	}
+func init() {
+	// load env vars to global variable first
+	config.LoadConfig(".")
+	config.ConnectDB()
+}
 
+func main() {
 	router := gin.Default()
 
-	//run database
-	// configs.ConnectDB()
-
-	//routes
 	invoice.RegisterHandlers(router)
 
-	router.Run(":" + config.PORT)
+	router.Run(":" + config.EnvVariables.PORT)
 }

@@ -2,6 +2,7 @@ package invoice
 
 import (
 	"invoice-dashboard/internal/entity"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,8 +13,7 @@ type Response struct {
 
 var invoices []entity.Invoice = []entity.Invoice{
 	{
-		ID:           "RT3080",
-		CreatedAt:    "2021-08-18",
+		ID:           3080,
 		PaymentDue:   "2021-08-19",
 		Description:  "Re-branding",
 		PaymentTerms: 1,
@@ -53,24 +53,30 @@ func CreateInvoice(context *gin.Context) {
 		return
 	}
 
-	invoices = append(invoices, newInvoice)
+	// invoices = append(invoices, newInvoice)
+	Create(&newInvoice)
 	respose := Response{message: "successfully added"}
 	context.JSON(200, respose)
 }
 
 func GetAll(context *gin.Context) {
+	invoices := FindInvoices()
 	context.JSON(200, invoices)
 }
 
 func GetById(context *gin.Context) {
-	id := context.Param("invoiceId")
+	parsedUint := context.Param("invoiceId")
+	id, err := strconv.ParseUint(parsedUint, 10, 64)
+	if err != nil {
+		context.JSON(403, "ID is wrong")
+	}
 	for _, invoice := range invoices {
 		if invoice.ID == id {
 			context.JSON(200, invoice)
 			return
 		}
 	}
-	respose := Response{message: "no invoice found with given id: " + id}
+	respose := Response{message: "no invoice found with given id: " + parsedUint}
 	context.JSON(404, respose)
 }
 
@@ -82,7 +88,11 @@ func EditInvoice(context *gin.Context) {
 		return
 	}
 
-	id := context.Param("invoiceId")
+	parsedUint := context.Param("invoiceId")
+	id, err := strconv.ParseUint(parsedUint, 10, 64)
+	if err != nil {
+		context.JSON(403, "ID is wrong")
+	}
 	for i, invoice := range invoices {
 		if invoice.ID == id {
 			invoices[i] = invoiceObj
@@ -90,12 +100,16 @@ func EditInvoice(context *gin.Context) {
 			return
 		}
 	}
-	response := Response{message: "no invoice found with given id: " + id}
+	response := Response{message: "no invoice found with given id: " + parsedUint}
 	context.JSON(404, response)
 }
 
 func DeleteInvoice(context *gin.Context) {
-	id := context.Param("invoiceId")
+	parsedUint := context.Param("invoiceId")
+	id, err := strconv.ParseUint(parsedUint, 10, 64)
+	if err != nil {
+		context.JSON(403, "ID is wrong")
+	}
 	for i, invoice := range invoices {
 		if invoice.ID == id {
 			invoices = append(invoices[:i], invoices[i+1:]...)
@@ -104,6 +118,6 @@ func DeleteInvoice(context *gin.Context) {
 			return
 		}
 	}
-	response := Response{message: "no invoice found with given id: " + id}
+	response := Response{message: "no invoice found with given id: " + parsedUint}
 	context.JSON(404, response)
 }

@@ -15,8 +15,7 @@ type Item struct {
 }
 
 type Invoice struct {
-	ID            string  `json:"id"`
-	CreatedAt     string  `json:"createdAt"`
+	ID            uint64  `gorm:"primaryKey"`
 	PaymentDue    string  `json:"paymentDue"`
 	Description   string  `json:"description"`
 	PaymentTerms  int     `json:"paymentTerms"`
