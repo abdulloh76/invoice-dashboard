@@ -11,7 +11,7 @@ post {{rootUrl}}/invoice
 Content-Type: application/json
 
 {
-	"paymentDue": "2021-08-19",
+	"paymentDue": "2021-08-19T17:23:21.349752+05:00",
 	"description": "Re-branding",
 	"paymentTerms": 1,
 	"clientName": "John Wick",
@@ -45,7 +45,7 @@ put {{rootUrl}}/invoice/2180
 Content-Type: application/json
 
 {
-	"paymentDue": "2021-08-19",
+	"paymentDue": "2021-08-19T17:23:21.349752+05:00",
 	"description": "Re-branding",
 	"paymentTerms": 1,
 	"clientName": "John Wick",

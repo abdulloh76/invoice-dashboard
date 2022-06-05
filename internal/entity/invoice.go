@@ -1,29 +1,47 @@
 package entity
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
+type Invoice struct {
+	gorm.Model
+	ID              uint64    `gorm:"primaryKey;autoincrement:true" json:"id" binding:"required"`
+	PaymentDue      time.Time `json:"paymentDue" binding:"required"`
+	Description     string    `json:"description" binding:"required"`
+	PaymentTerms    int       `json:"paymentTerms" binding:"required"`
+	ClientName      string    `json:"clientName" binding:"required"`
+	ClientEmail     string    `json:"clientEmail" binding:"required"`
+	Status          string    `json:"status" binding:"required"`
+	SenderAddressID *uint64
+	ClientAddressID *uint64
+	SenderAddress   *Address  `gorm:"foreignKey:InvoiceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"senderAddress" binding:"required"`
+	ClientAddress   *Address  `gorm:"foreignKey:InvoiceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"clientAddress" binding:"required"`
+	Items           []Item    `gorm:"foreignKey:InvoiceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"items" binding:"required,dive"`
+	Total           float32   `json:"total" binding:"required"`
+	CreatedAt       time.Time `json:"createdAt" binding:"required"`
+	UpdatedAt       time.Time `json:"updatedAt" binding:"required"`
+	DeletedAt       time.Time `json:"deletedAt" binding:"required"`
+}
+
 type Address struct {
-	Street   string `json:"street"`
-	City     string `json:"city"`
-	PostCode string `json:"postCode"`
-	Country  string `json:"country"`
+	gorm.Model
+	ID        uint64 `gorm:"primaryKey"`
+	InvoiceID uint64
+	Street    string `json:"street" binding:"required"`
+	City      string `json:"city" binding:"required"`
+	PostCode  string `json:"postCode" binding:"required"`
+	Country   string `json:"country" binding:"required"`
 }
 
 type Item struct {
-	Name     string  `json:"name"`
-	Quantity int     `json:"quantity"`
-	Price    float32 `json:"price"`
-	Total    float32 `json:"total"`
-}
-
-type Invoice struct {
-	ID            uint64  `gorm:"primaryKey"`
-	PaymentDue    string  `json:"paymentDue"`
-	Description   string  `json:"description"`
-	PaymentTerms  int     `json:"paymentTerms"`
-	ClientName    string  `json:"clientName"`
-	ClientEmail   string  `json:"clientEmail"`
-	Status        string  `json:"status"`
-	SenderAddress Address `json:"senderAddress"`
-	ClientAddress Address `json:"clientAddress"`
-	Items         []Item  `json:"items"`
-	Total         float32 `json:"total"`
+	gorm.Model
+	InvoiceID uint64
+	ID        uint64  `gorm:"primaryKey"`
+	Name      string  `json:"name" binding:"required"`
+	Quantity  int     `json:"quantity" binding:"required"`
+	Price     float32 `json:"price" binding:"required"`
+	Total     float32 `json:"total" binding:"required"`
 }
