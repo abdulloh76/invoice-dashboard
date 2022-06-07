@@ -6,21 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Response struct {
-	message string
-}
-
 func CreateInvoice(context *gin.Context) {
 	var newInvoice entity.Invoice
 
 	if context.BindJSON(&newInvoice) == nil {
-		context.JSON(400, Response{message: "couldn't parse given body"})
-		return
+		context.JSON(400, map[string]string{
+			"message": "couldn't parse given body",
+		})
 	}
 
 	InsertInvoice(&newInvoice)
-	respose := Response{message: "successfully added"}
-	context.JSON(200, respose)
+	context.JSON(200, map[string]string{
+		"message": "successfully added",
+	})
 }
 
 func GetAll(context *gin.Context) {

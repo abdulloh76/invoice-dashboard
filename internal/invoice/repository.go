@@ -13,10 +13,15 @@ var db *gorm.DB
 func init() {
 	config.ConnectDB()
 	db = config.GetDB()
+
 	invoicePrototype := &entity.Invoice{}
-	itemPrototype := &entity.Item{}
 	adsressPrototype := &entity.Address{}
-	db.AutoMigrate(itemPrototype, adsressPrototype, invoicePrototype)
+	itemPrototype := &entity.Item{}
+
+	db.AutoMigrate(adsressPrototype)
+	db.AutoMigrate(itemPrototype)
+	db.AutoMigrate(invoicePrototype)
+
 	fmt.Println(db)
 }
 
@@ -29,7 +34,7 @@ func InsertInvoice(invoice *entity.Invoice) *entity.Invoice {
 func FindInvoices() []entity.Invoice {
 	// consider querying the entities
 	var invoices []entity.Invoice
-	db.Find(&invoices)
+	db.Joins("Items").Joins("Address").Find(&invoices)
 	return invoices
 }
 
