@@ -14,13 +14,9 @@ func init() {
 	config.ConnectDB()
 	db = config.GetDB()
 
-	invoicePrototype := &entity.Invoice{}
-	adsressPrototype := &entity.Address{}
-	itemPrototype := &entity.Item{}
-
-	db.AutoMigrate(adsressPrototype)
-	db.AutoMigrate(itemPrototype)
-	db.AutoMigrate(invoicePrototype)
+	db.AutoMigrate(&entity.Address{})
+	db.AutoMigrate(&entity.Invoice{})
+	db.AutoMigrate(&entity.Item{})
 
 	fmt.Println(db)
 }
@@ -34,7 +30,8 @@ func InsertInvoice(invoice *entity.Invoice) *entity.Invoice {
 func FindInvoices() []entity.Invoice {
 	// consider querying the entities
 	var invoices []entity.Invoice
-	db.Joins("Items").Joins("Address").Find(&invoices)
+	// db.Joins("Items").Joins("Address").Find(&invoices)
+	db.Find(&invoices)
 	return invoices
 }
 
