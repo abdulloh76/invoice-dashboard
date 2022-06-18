@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-type Address struct {
+type PostAddressDto struct {
 	Street   string
 	City     string
 	PostCode string
 	Country  string
 }
 
-type Item struct {
+type PostItemDto struct {
 	Name     string
 	Quantity int
 	Price    float32
@@ -26,21 +26,21 @@ type InvoiceRequestBody struct {
 	ClientName    string
 	ClientEmail   string
 	Status        string
-	SenderAddress Address
-	ClientAddress Address
-	Items         []Item
+	SenderAddress PostAddressDto
+	ClientAddress PostAddressDto
+	Items         []PostItemDto
 	Total         float32
 }
 
 func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
 	var items []entity.Item = make([]entity.Item, len(dto.Items))
 
-	for i, item := range dto.Items {
+	for i, dtoItem := range dto.Items {
 		items[i] = entity.Item{
-			Name:     item.Name,
-			Quantity: item.Quantity,
-			Price:    item.Price,
-			Total:    item.Total,
+			Name:     dtoItem.Name,
+			Quantity: dtoItem.Quantity,
+			Price:    dtoItem.Price,
+			Total:    dtoItem.Total,
 		}
 	}
 

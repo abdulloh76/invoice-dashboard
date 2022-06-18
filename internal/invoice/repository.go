@@ -3,6 +3,7 @@ package invoice
 import (
 	"fmt"
 	"invoice-dashboard/config"
+	"invoice-dashboard/internal/dto/invoiceDto"
 	"invoice-dashboard/internal/entity"
 
 	"gorm.io/gorm"
@@ -27,14 +28,19 @@ func InsertInvoice(invoice *entity.Invoice) {
 	db.Create(&invoice)
 }
 
-func FindInvoices() []entity.Invoice {
-	// consider querying the entities
-	var invoices []entity.Invoice
-	db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").Find(&invoices)
+func FindInvoices() []invoiceDto.InvoicesResponse {
+	// consider querying the entities for smth like filter
+	var invoices []invoiceDto.InvoicesResponse
+
+	db.Model(&entity.Invoice{}).Find(&invoices)
 	return invoices
 }
 
-func FindInvoiceById() {}
+func FindInvoiceById(id uint64) entity.Invoice {
+	var invoice entity.Invoice
+	db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, id)
+	return invoice
+}
 
 func UpdateInvoice() {}
 
