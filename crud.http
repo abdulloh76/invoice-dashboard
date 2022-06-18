@@ -4,7 +4,7 @@
 get {{rootUrl}}/invoice
 
 ###
-get {{rootUrl}}/invoice/3080
+get {{rootUrl}}/invoice/1
 
 ###
 post {{rootUrl}}/invoice
@@ -35,6 +35,12 @@ Content-Type: application/json
 			"quantity": 1,
 			"price": 1800.90,
 			"total": 1800.90
+		},
+		{
+			"name": "car tax",
+			"quantity": 1,
+			"price": 180.90,
+			"total": 100.90
 		}
 	],
 	"total": 1800.90
