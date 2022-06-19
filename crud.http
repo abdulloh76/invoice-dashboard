@@ -39,11 +39,11 @@ Content-Type: application/json
 		{
 			"name": "car tax",
 			"quantity": 1,
-			"price": 180.90,
-			"total": 100.90
+			"price": 200.10,
+			"total": 200.10
 		}
 	],
-	"total": 1800.90
+	"total": 2000
 }
 
 ###
