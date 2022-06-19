@@ -25,6 +25,7 @@ func main() {
 	//  }
 
 	router := gin.Default()
+	router.Use(config.CORSMiddleware())
 
 	invoice.RegisterHandlers(router)
 
