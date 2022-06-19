@@ -1,14 +1,16 @@
 package entity
 
 import (
+	"errors"
 	"time"
 
+	"github.com/teris-io/shortid"
 	"gorm.io/gorm"
 )
 
 type Invoice struct {
 	gorm.Model
-	ID              uint64
+	ID              string
 	PaymentDue      time.Time
 	Description     string
 	PaymentTerms    int
@@ -37,9 +39,18 @@ type Address struct {
 type Item struct {
 	gorm.Model
 	ID        uint64
-	InvoiceID uint64
+	InvoiceID string
 	Name      string
 	Quantity  int
 	Price     float32
 	Total     float32
+}
+
+func (invoice *Invoice) BeforeCreate(tx *gorm.DB) (err error) {
+	invoice.ID, err = shortid.Generate()
+
+	if err != nil {
+		return errors.New("can't save invalid data")
+	}
+	return nil
 }

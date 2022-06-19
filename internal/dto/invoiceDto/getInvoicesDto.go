@@ -5,7 +5,7 @@ import (
 )
 
 type InvoicesResponse struct {
-	ID         uint64    `json:"id"`
+	ID         string    `json:"id"`
 	PaymentDue time.Time `json:"paymentDue"`
 	ClientName string    `json:"clientName"`
 	Status     string    `json:"status"`

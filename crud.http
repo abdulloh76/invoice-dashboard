@@ -4,7 +4,7 @@
 get {{rootUrl}}/invoice
 
 ###
-get {{rootUrl}}/invoice/1
+get {{rootUrl}}/invoice/tEyIsgqng
 
 ###
 post {{rootUrl}}/invoice

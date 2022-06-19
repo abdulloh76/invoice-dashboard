@@ -2,7 +2,6 @@ package invoice
 
 import (
 	"invoice-dashboard/internal/dto/invoiceDto"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -46,15 +45,15 @@ func GetAll(context *gin.Context) {
 func GetById(context *gin.Context) {
 	invoiceId := context.Param("invoiceId")
 
-	id, err := strconv.ParseUint(invoiceId, 10, 64)
-	if err != nil {
+	// shordid ususally returns string with length 9||10
+	if len(invoiceId) != 9 && len(invoiceId) != 10 {
 		context.AbortWithStatusJSON(400, map[string]string{
 			"message": "id is not valid",
 		})
 		return
 	}
 
-	invoice, err := FindInvoiceById(id)
+	invoice, err := FindInvoiceById(invoiceId)
 	if err != nil {
 		context.AbortWithStatusJSON(404, map[string]string{
 			"message": "invoice wiht given id not found",

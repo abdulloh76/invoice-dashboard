@@ -36,9 +36,9 @@ func FindInvoices() ([]invoiceDto.InvoicesResponse, error) {
 	return invoices, err
 }
 
-func FindInvoiceById(id uint64) (entity.Invoice, error) {
+func FindInvoiceById(id string) (entity.Invoice, error) {
 	var invoice entity.Invoice
-	err := db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, id).Error
+	err := db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, "id = ?", id).Error
 	return invoice, err
 }
 

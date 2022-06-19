@@ -21,7 +21,7 @@ type GetItemDto struct {
 }
 
 type InvoiceResponse struct {
-	ID            uint64        `json:"id"`
+	ID            string        `json:"id"`
 	PaymentDue    time.Time     `json:"paymentDue"`
 	Description   string        `json:"description"`
 	PaymentTerms  int           `json:"paymentTerms"`
