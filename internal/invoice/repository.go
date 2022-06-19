@@ -22,24 +22,24 @@ func init() {
 	fmt.Println(db)
 }
 
-func InsertInvoice(invoice *entity.Invoice) {
+func InsertInvoice(invoice *entity.Invoice) error {
 	// soomeday i think we need to consider to not duplicate address coz usually user doesn't change his address
 	// consider beforeCreate hook for being in control of ID
-	db.Create(&invoice)
+	err := db.Create(&invoice).Error
+	return err
 }
 
-func FindInvoices() []invoiceDto.InvoicesResponse {
+func FindInvoices() ([]invoiceDto.InvoicesResponse, error) {
 	// consider querying the entities for smth like filter
 	var invoices []invoiceDto.InvoicesResponse
-
-	db.Model(&entity.Invoice{}).Find(&invoices)
-	return invoices
+	err := db.Model(&entity.Invoice{}).Find(&invoices).Error
+	return invoices, err
 }
 
-func FindInvoiceById(id uint64) entity.Invoice {
+func FindInvoiceById(id uint64) (entity.Invoice, error) {
 	var invoice entity.Invoice
-	db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, id)
-	return invoice
+	err := db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, id).Error
+	return invoice, err
 }
 
 func UpdateInvoice() {}
