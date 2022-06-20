@@ -67,4 +67,26 @@ func GetById(context *gin.Context) {
 
 func EditInvoice(context *gin.Context) {}
 
-func DeleteInvoice(context *gin.Context) {}
+func DeleteInvoice(context *gin.Context) {
+	invoiceId := context.Param("invoiceId")
+
+	// shordid ususally returns string with length 9||10
+	if len(invoiceId) != 9 && len(invoiceId) != 10 {
+		context.AbortWithStatusJSON(400, map[string]string{
+			"message": "id is not valid",
+		})
+		return
+	}
+
+	err := RemoveInvoice(invoiceId)
+	if err != nil {
+		context.AbortWithStatusJSON(404, map[string]string{
+			"message": "invoice wiht given id not found",
+		})
+		return
+	}
+
+	context.JSON(201, map[string]string{
+		"message": "successfully deleted",
+	})
+}

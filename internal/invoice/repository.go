@@ -44,4 +44,7 @@ func FindInvoiceById(id string) (entity.Invoice, error) {
 
 func UpdateInvoice() {}
 
-func RemoveInvoice() {}
+func RemoveInvoice(id string) error {
+	err := db.Unscoped().Delete(&entity.Invoice{}, "id = ?", id).Error
+	return err
+}

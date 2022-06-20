@@ -4,7 +4,7 @@
 get {{rootUrl}}/invoice
 
 ###
-get {{rootUrl}}/invoice/tEyIsgqng
+get {{rootUrl}}/invoice/_Emijiqng
 
 ###
 post {{rootUrl}}/invoice
@@ -47,38 +47,4 @@ Content-Type: application/json
 }
 
 ###
-put {{rootUrl}}/invoice/2180
-Content-Type: application/json
-
-{
-	"paymentDue": "2021-08-19T17:23:21.349752+05:00",
-	"description": "Re-branding",
-	"paymentTerms": 1,
-	"clientName": "John Wick",
-	"clientEmail": "johnwick@mail.com",
-	"status": "unpaid",
-	"senderAddress": {
-		"street": "19 Brooklyn",
-		"city": "New York",
-		"postCode": "E1 3EZ",
-		"country": "USA"
-	},
-	"clientAddress": {
-		"street": "106 Kendell Street",
-		"city": "Sharrington",
-		"postCode": "NR24 5WQ",
-		"country": "United Kingdom"
-	},
-	"items": [
-		{
-			"name": "Brand Guidelines",
-			"quantity": 1,
-			"price": 1800.90,
-			"total": 1800.90
-		}
-	],
-	"total": 1800.90
-}
-
-###
-delete {{rootUrl}}/invoice/3080
+delete {{rootUrl}}/invoice/_Emijiqng
