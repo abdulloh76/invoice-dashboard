@@ -23,8 +23,6 @@ type Invoice struct {
 	ClientAddress   Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Items           []Item  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Total           float32
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
 }
 
 type Address struct {

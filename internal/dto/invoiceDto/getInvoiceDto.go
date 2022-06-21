@@ -69,8 +69,10 @@ func EntitytoResponsetDTO(invoice *entity.Invoice) InvoiceResponse {
 			PostCode: invoice.ClientAddress.PostCode,
 			Country:  invoice.ClientAddress.Country,
 		},
-		Items: items,
-		Total: invoice.Total,
+		Items:     items,
+		Total:     invoice.Total,
+		CreatedAt: invoice.CreatedAt,
+		UpdatedAt: invoice.UpdatedAt,
 	}
 
 	return getInvoiceDto

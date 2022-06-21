@@ -29,11 +29,11 @@ type InvoiceRequestBody struct {
 	SenderAddress PostAddressDto
 	ClientAddress PostAddressDto
 	Items         []PostItemDto
-	Total         float32
 }
 
 func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
 	var items []entity.Item = make([]entity.Item, len(dto.Items))
+	var total float32 = 0
 
 	for i, dtoItem := range dto.Items {
 		items[i] = entity.Item{
@@ -42,6 +42,7 @@ func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
 			Price:    dtoItem.Price,
 			Total:    dtoItem.Total,
 		}
+		total += dtoItem.Total
 	}
 
 	invoice := entity.Invoice{
@@ -64,7 +65,7 @@ func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
 			Country:  dto.ClientAddress.Country,
 		},
 		Items: items,
-		Total: dto.Total,
+		Total: total,
 	}
 
 	return invoice
