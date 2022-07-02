@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	if os.Getenv("GIN_MODE") == "" {
+	if os.Getenv("PORT") == "" {
 		config.LoadConfig("./config", "dev", "yml")
 	} else {
 		// in heroku
