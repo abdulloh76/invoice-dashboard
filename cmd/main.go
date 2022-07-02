@@ -6,12 +6,18 @@ import (
 	"invoice-dashboard/internal/invoice"
 	"invoice-dashboard/internal/middleware"
 	"invoice-dashboard/pkg/db"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
 func init() {
-	config.LoadConfig("./config", "dev", "yml")
+	if os.Getenv("GIN_MODE") == "" {
+		config.LoadConfig("./config", "dev", "yml")
+	} else {
+		// in heroku
+		config.InitializeFromOS()
+	}
 
 	db.ConnectDB()
 	database := db.GetDB()

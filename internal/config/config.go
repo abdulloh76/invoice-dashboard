@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -31,4 +32,9 @@ func LoadConfig(configPath, configName, configType string) {
 
 	Configs.PORT = viper.GetString("PORT")
 	Configs.POSTGRES_URI = viper.GetString("POSTGRES_URI")
+}
+
+func InitializeFromOS() {
+	Configs.POSTGRES_URI = os.Getenv("DATABASE_URL")
+	Configs.PORT = os.Getenv("PORT")
 }
