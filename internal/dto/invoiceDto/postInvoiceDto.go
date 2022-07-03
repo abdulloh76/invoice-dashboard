@@ -6,29 +6,29 @@ import (
 )
 
 type PostAddressDto struct {
-	Street   string
-	City     string
-	PostCode string
-	Country  string
+	Street   string `json:"street"`
+	City     string `json:"city"`
+	PostCode string `json:"postCode"`
+	Country  string `json:"country"`
 }
 
 type PostItemDto struct {
-	Name     string
-	Quantity int
-	Price    float32
-	Total    float32
+	Name     string  `json:"name"`
+	Quantity int     `json:"quantity"`
+	Price    float32 `json:"price"`
+	Total    float32 `json:"total"`
 }
 
 type InvoiceRequestBody struct {
-	PaymentDue    time.Time
-	Description   string
-	PaymentTerms  int
-	ClientName    string
-	ClientEmail   string
-	Status        string
-	SenderAddress PostAddressDto
-	ClientAddress PostAddressDto
-	Items         []PostItemDto
+	PaymentDue    time.Time      `json:"paymentDue"`
+	Description   string         `json:"description"`
+	PaymentTerms  int            `json:"paymentTerms"`
+	ClientName    string         `json:"clientName"`
+	ClientEmail   string         `json:"clientEmail"`
+	Status        string         `json:"status"`
+	SenderAddress PostAddressDto `json:"senderAddress"`
+	ClientAddress PostAddressDto `json:"clientAddress"`
+	Items         []PostItemDto  `json:"items"`
 }
 
 func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
