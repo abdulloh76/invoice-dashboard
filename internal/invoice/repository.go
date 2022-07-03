@@ -28,10 +28,30 @@ func FindInvoiceById(id string) (entity.Invoice, error) {
 	return invoice, err
 }
 
-func UpdateInvoice() {}
+func ModifyInvoice(id string, modifiedInvoice invoiceDto.PutInvoiceBody) error {
+	database := db.GetDB()
+
+	if modifiedInvoice.ClientAddress.IsModified {
+		database.Model(&entity.Address{}).Where("invoice_id = ?", id).Updates(modifiedInvoice.ClientAddress)
+	}
+	if modifiedInvoice.SenderAddress.IsModified {
+		database.Model(&entity.Address{}).Where("invoice_id = ?", id).Updates(modifiedInvoice.SenderAddress)
+	}
+
+	database.Model(&entity.Item{}).Updates(modifiedInvoice.Items.ModifiedItems)
+	database.Unscoped().Delete(&entity.Item{}, modifiedInvoice.Items.DeletedItems)
+
+	newItems := invoiceDto.PostItemToEntity(modifiedInvoice.Items.CreatedItems, id)
+	database.Model(&entity.Item{}).Create(newItems)
+
+	err := database.Model(&entity.Invoice{}).Where("id = ?", id).Updates(modifiedInvoice).Error
+
+	return err
+}
 
 func RemoveInvoice(id string) error {
 	database := db.GetDB()
 	err := database.Unscoped().Delete(&entity.Invoice{}, "id = ?", id).Error
+	// delete items, addresses
 	return err
 }

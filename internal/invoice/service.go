@@ -19,7 +19,7 @@ func CreateInvoice(context *gin.Context) {
 	err := InsertInvoice(&newInvoice)
 	if err != nil {
 		context.AbortWithStatusJSON(500, map[string]string{
-			"message": "unexpected error occured",
+			"message": "unexpected error occured: " + err.Error(),
 		})
 		return
 	}
@@ -34,7 +34,7 @@ func GetAll(context *gin.Context) {
 
 	if err != nil {
 		context.AbortWithStatusJSON(500, map[string]string{
-			"message": "unexpected error occured",
+			"message": "unexpected error occured: " + err.Error(),
 		})
 		return
 	}
@@ -56,7 +56,7 @@ func GetById(context *gin.Context) {
 	invoice, err := FindInvoiceById(invoiceId)
 	if err != nil {
 		context.AbortWithStatusJSON(404, map[string]string{
-			"message": "invoice wiht given id not found",
+			"message": "invoice wiht given id not found: " + err.Error(),
 		})
 		return
 	}
@@ -65,7 +65,29 @@ func GetById(context *gin.Context) {
 	context.JSON(200, invoiceDto)
 }
 
-func EditInvoice(context *gin.Context) {}
+func UpdateInvoice(context *gin.Context) {
+	invoiceId := context.Param("invoiceId")
+
+	var invoice invoiceDto.PutInvoiceBody
+	if context.BindJSON(&invoice) != nil {
+		context.AbortWithStatusJSON(400, map[string]string{
+			"message": "couldn't parse given body",
+		})
+		return
+	}
+
+	err := ModifyInvoice(invoiceId, invoice)
+	if err != nil {
+		context.AbortWithStatusJSON(500, map[string]string{
+			"message": "can't modify invoice object: " + err.Error(),
+		})
+		return
+	}
+
+	updatedInvoice, _ := FindInvoiceById(invoiceId)
+
+	context.JSON(200, updatedInvoice)
+}
 
 func DeleteInvoice(context *gin.Context) {
 	invoiceId := context.Param("invoiceId")
@@ -81,7 +103,7 @@ func DeleteInvoice(context *gin.Context) {
 	err := RemoveInvoice(invoiceId)
 	if err != nil {
 		context.AbortWithStatusJSON(404, map[string]string{
-			"message": "invoice wiht given id not found",
+			"message": "invoice wiht given id not found: " + err.Error(),
 		})
 		return
 	}
