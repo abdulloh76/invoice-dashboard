@@ -27,12 +27,11 @@ type Invoice struct {
 
 type Address struct {
 	gorm.Model
-	ID        uint64
-	InvoiceID string
-	Street    string
-	City      string
-	PostCode  string
-	Country   string
+	ID       uint64
+	Street   string
+	City     string
+	PostCode string
+	Country  string
 }
 
 type Item struct {

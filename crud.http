@@ -4,7 +4,7 @@
 get {{rootUrl}}/invoice
 
 ###
-get {{rootUrl}}/invoice/B6fmQGenR
+get {{rootUrl}}/invoice/0QzKlueng
 
 ###
 post {{rootUrl}}/invoice
@@ -12,8 +12,8 @@ Content-Type: application/json
 
 {
 	"paymentDue": "2021-08-19T17:23:21.349752+05:00",
-	"description": "Re-branding",
-	"paymentTerms": 1,
+  "description": "Graphic Design",
+  "paymentTerms": 10,
 	"clientName": "John Wick",
 	"clientEmail": "johnwick@mail.com",
 	"status": "paid",
@@ -24,71 +24,71 @@ Content-Type: application/json
 		"country": "USA"
 	},
 	"clientAddress": {
-		"street": "106 Kendell Street",
-		"city": "Sharrington",
-		"postCode": "NR24 5WQ",
-		"country": "United Kingdom"
+    "street": "19 Union Terrace",
+    "city": "London ",
+    "postCode": "E1 3EZ",
+    "country": "United Kingdom"
 	},
 	"items": [
 		{
 			"name": "Brand Guidelines",
 			"quantity": 1,
-			"price": 1800.90,
-			"total": 1800.90
+			"price": 1000,
+			"total": 1000
 		},
 		{
-			"name": "car tax",
-			"quantity": 1,
-			"price": 200.10,
-			"total": 200.10
+      "name": "Email Design",
+      "quantity": 2,
+      "price": 200,
+      "total": 400
 		}
 	]
 }
 
 ###
-patch {{rootUrl}}/invoice/M904fr3ng
+put {{rootUrl}}/invoice/0QzKlueng
 Content-Type: application/json
 
 {
 	"paymentDue": "2021-08-19T17:23:21.349752+05:00",
-	"description": "Re-branding",
-	"paymentTerms": 1,
-	"clientName": "John Wick",
-	"clientEmail": "johnwick@mail.com",
+	"description": "graphic",
+	"paymentTerms": 15,
+	"clientName": "Sherlock Holmes",
+	"clientEmail": "sherlock@mail.com",
 	"status": "paid",
 	"senderAddress": {
-		"street": "19 Brooklyn",
-		"city": "New York",
+		"street": "221 Brooklyn",
+		"city": "Brooklyn",
 		"postCode": "E1 3EZ",
 		"country": "USA",
-		"isModified": false
+		"isModified": true
 	},
 	"clientAddress": {
-		"street": "106 Kendell Street",
-		"city": "Sharrington",
+		"street": "221B Baker Street",
+		"city": "London",
 		"postCode": "NR24 5WQ",
-		"country": "United Kingdom",
-		"isModified": false
+		"country": "UK",
+		"isModified": true
 	},
 	"items": {
-		"createdItems": [		
+		"createdItems": [
 			{
-				"name": "sticker design",
-				"quantity": 4,
-				"price": 100,
-				"total": 400
+				"name": "Design of smth",
+				"quantity": 3,
+				"price": 200,
+				"total": 600
 			}
 		],
-		"modifiedItems": [		
+		"modifiedItems": [
 			{
-				"id": 1,
-				"name": "Brand Guidelines",
+				"id": 7,
+				"name": "just guidelines",
 				"quantity": 1,
 				"price": 1500,
 				"total": 1500
 			}
 		],
-		"deletedItems": [2]
+		"deletedItems": [8]
 	}
 	
 }

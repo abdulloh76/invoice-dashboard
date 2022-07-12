@@ -68,6 +68,14 @@ func GetById(context *gin.Context) {
 func UpdateInvoice(context *gin.Context) {
 	invoiceId := context.Param("invoiceId")
 
+	curInvoice, notFoundErr := FindInvoiceById(invoiceId)
+	if notFoundErr != nil {
+		context.AbortWithStatusJSON(404, map[string]string{
+			"message": "invoice wiht given id not found: " + notFoundErr.Error(),
+		})
+		return
+	}
+
 	var invoice invoiceDto.PutInvoiceBody
 	if context.BindJSON(&invoice) != nil {
 		context.AbortWithStatusJSON(400, map[string]string{
@@ -76,7 +84,7 @@ func UpdateInvoice(context *gin.Context) {
 		return
 	}
 
-	err := ModifyInvoice(invoiceId, invoice)
+	err := ModifyInvoice(&curInvoice, invoice)
 	if err != nil {
 		context.AbortWithStatusJSON(500, map[string]string{
 			"message": "can't modify invoice object: " + err.Error(),
@@ -84,15 +92,17 @@ func UpdateInvoice(context *gin.Context) {
 		return
 	}
 
+	// ? is ignoring the err ok for this expression
 	updatedInvoice, _ := FindInvoiceById(invoiceId)
+	invoiceDto := invoiceDto.EntitytoResponsetDTO(&updatedInvoice)
 
-	context.JSON(200, updatedInvoice)
+	context.JSON(200, invoiceDto)
 }
 
 func DeleteInvoice(context *gin.Context) {
 	invoiceId := context.Param("invoiceId")
 
-	// shordid ususally returns string with length 9||10
+	// !shordid ususally returns string with length 9||10
 	if len(invoiceId) != 9 && len(invoiceId) != 10 {
 		context.AbortWithStatusJSON(400, map[string]string{
 			"message": "id is not valid",
