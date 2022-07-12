@@ -15,3 +15,5 @@
 # vendor/
 
 config/prod.yml
+
+.env
