@@ -39,10 +39,10 @@ type PutInvoiceBody struct {
 	Items         PutItemsDto   `json:"items"`
 }
 
-func PostItemsToEntitities(newItems []PostItemDto, invoiceId string) []entity.Item {
-	var items []entity.Item = make([]entity.Item, len(newItems))
+func PostItemsToEntitities(newItems *[]PostItemDto, invoiceId string) []entity.Item {
+	var items []entity.Item = make([]entity.Item, len(*newItems))
 
-	for i, dto := range newItems {
+	for i, dto := range *newItems {
 		items[i] = entity.Item{
 			InvoiceID: invoiceId,
 			Name:      dto.Name,

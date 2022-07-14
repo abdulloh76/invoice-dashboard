@@ -1,8 +1,10 @@
 package invoice
 
 import (
+	"invoice-dashboard/internal/address"
 	"invoice-dashboard/internal/dto/invoiceDto"
 	"invoice-dashboard/internal/entity"
+	"invoice-dashboard/internal/invoiceItem"
 	"invoice-dashboard/pkg/db"
 
 	"gorm.io/gorm"
@@ -35,48 +37,29 @@ func ModifyInvoice(curInvoice *entity.Invoice, modifiedInvoice invoiceDto.PutInv
 
 	return database.Transaction(func(tx *gorm.DB) error {
 		if modifiedInvoice.ClientAddress.IsModified {
-			if err := tx.Model(&entity.Address{}).Where(curInvoice.ClientAddress.ID).Updates(&entity.Address{
-				Street:   modifiedInvoice.ClientAddress.Street,
-				City:     modifiedInvoice.ClientAddress.City,
-				PostCode: modifiedInvoice.ClientAddress.PostCode,
-				Country:  modifiedInvoice.ClientAddress.Country,
-			}).Error; err != nil {
+			if err := address.ModifyAddress(tx, curInvoice.ClientAddress.ID, &modifiedInvoice.ClientAddress); err != nil {
 				return err
 			}
 		}
 
+		// todo! tell, don't ask
 		if modifiedInvoice.SenderAddress.IsModified {
-			if err := tx.Model(&entity.Address{}).Where(curInvoice.SenderAddress.ID).Updates(&entity.Address{
-				Street:   modifiedInvoice.SenderAddress.Street,
-				City:     modifiedInvoice.SenderAddress.City,
-				PostCode: modifiedInvoice.SenderAddress.PostCode,
-				Country:  modifiedInvoice.SenderAddress.Country,
-			}).Error; err != nil {
+			if err := address.ModifyAddress(tx, curInvoice.SenderAddress.ID, &modifiedInvoice.SenderAddress); err != nil {
 				return err
 			}
 		}
 
 		for _, item := range modifiedInvoice.Items.ModifiedItems {
-			if err := tx.Model(&entity.Item{}).Where(item.ID).Updates(&entity.Item{
-				InvoiceID: curInvoice.ID,
-				Name:      item.Name,
-				Quantity:  item.Quantity,
-				Price:     item.Price,
-				Total:     item.Total,
-			}).Error; err != nil {
+			if err := invoiceItem.ModifyItem(tx, curInvoice.ID, &item); err != nil {
 				return err
 			}
 		}
 
-		if len(modifiedInvoice.Items.DeletedItems) > 0 {
-			// !that's very tricky coz what if client gives ids for items not in this invoice
-			if err := tx.Unscoped().Delete(&entity.Item{}, modifiedInvoice.Items.DeletedItems).Error; err != nil {
-				return err
-			}
+		if err := invoiceItem.BatchDeleteItems(tx, curInvoice.ID, modifiedInvoice.Items.DeletedItems); err != nil {
+			return err
 		}
 
-		newItems := invoiceDto.PostItemsToEntitities(modifiedInvoice.Items.CreatedItems, curInvoice.ID)
-		if err := tx.Model(&entity.Item{}).Create(newItems).Error; err != nil {
+		if err := invoiceItem.BatchInsertItems(tx, curInvoice.ID, &modifiedInvoice.Items.CreatedItems); err != nil {
 			return err
 		}
 
