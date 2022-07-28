@@ -2,6 +2,7 @@ package invoice
 
 import (
 	"invoice-dashboard/internal/dto/invoiceDto"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -92,9 +93,8 @@ func UpdateInvoice(context *gin.Context) {
 		return
 	}
 
-	// ? is ignoring the err ok for this expression
-	updatedInvoice, _ := FindInvoiceById(invoiceId)
-	invoiceDto := invoiceDto.EntitytoResponsetDTO(&updatedInvoice)
+	curInvoice.UpdatedAt = time.Now()
+	invoiceDto := invoiceDto.EntitytoResponsetDTO(&curInvoice)
 
 	context.JSON(200, invoiceDto)
 }

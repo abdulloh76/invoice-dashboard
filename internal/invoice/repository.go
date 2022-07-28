@@ -33,54 +33,32 @@ func FindInvoiceById(id string) (entity.Invoice, error) {
 }
 
 func ModifyInvoice(curInvoice *entity.Invoice, modifiedInvoice invoiceDto.PutInvoiceBody) error {
-	database := db.GetDB()
 
-	return database.Transaction(func(tx *gorm.DB) error {
-		if modifiedInvoice.ClientAddress.IsModified {
-			if err := address.ModifyAddress(tx, curInvoice.ClientAddress.ID, &modifiedInvoice.ClientAddress); err != nil {
-				return err
-			}
-		}
+	return db.GetDB().Transaction(func(tx *gorm.DB) error {
+		address.ModifyAddress(&curInvoice.ClientAddress, &modifiedInvoice.ClientAddress)
+		address.ModifyAddress(&curInvoice.SenderAddress, &modifiedInvoice.SenderAddress)
 
-		// todo! tell, don't ask
-		if modifiedInvoice.SenderAddress.IsModified {
-			if err := address.ModifyAddress(tx, curInvoice.SenderAddress.ID, &modifiedInvoice.SenderAddress); err != nil {
-				return err
-			}
-		}
+		invoiceItem.BatchUpdateItems(curInvoice.Items, modifiedInvoice.Items.ModifiedItems)
 
-		for _, item := range modifiedInvoice.Items.ModifiedItems {
-			if err := invoiceItem.ModifyItem(tx, curInvoice.ID, &item); err != nil {
-				return err
-			}
-		}
+		deletedItems := invoiceItem.BatchDeleteItems(&curInvoice.Items, modifiedInvoice.Items.DeletedItems)
+		tx.Model(&curInvoice).Association("Items").Delete(deletedItems)
 
-		if err := invoiceItem.BatchDeleteItems(tx, curInvoice.ID, modifiedInvoice.Items.DeletedItems); err != nil {
-			return err
-		}
+		newItems := invoiceDto.PostItemsToEntitities(&modifiedInvoice.Items.CreatedItems, curInvoice.ID)
+		curInvoice.Items = append(curInvoice.Items, newItems...)
 
-		if err := invoiceItem.BatchInsertItems(tx, curInvoice.ID, &modifiedInvoice.Items.CreatedItems); err != nil {
-			return err
-		}
-
-		var items []entity.Item
-		if err := tx.Model(&entity.Item{}).Select("total").Where("invoice_id = ?", curInvoice.ID).Find(&items).Error; err != nil {
-			return err
-		}
 		var sumTotal float32 = 0
-		for _, item := range items {
+		for _, item := range curInvoice.Items {
 			sumTotal += item.Total
 		}
+		curInvoice.Total = sumTotal
+		curInvoice.PaymentDue = modifiedInvoice.PaymentDue
+		curInvoice.Description = modifiedInvoice.Description
+		curInvoice.PaymentTerms = modifiedInvoice.PaymentTerms
+		curInvoice.ClientName = modifiedInvoice.ClientName
+		curInvoice.ClientEmail = modifiedInvoice.ClientEmail
+		curInvoice.Status = modifiedInvoice.Status
 
-		err := tx.Model(&entity.Invoice{}).Where("id = ?", curInvoice.ID).Updates(&entity.Invoice{
-			PaymentDue:   modifiedInvoice.PaymentDue,
-			Description:  modifiedInvoice.Description,
-			PaymentTerms: modifiedInvoice.PaymentTerms,
-			ClientName:   modifiedInvoice.ClientName,
-			ClientEmail:  modifiedInvoice.ClientEmail,
-			Status:       modifiedInvoice.Status,
-			Total:        sumTotal,
-		}).Error
+		err := tx.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&curInvoice).Error
 
 		return err
 	})
