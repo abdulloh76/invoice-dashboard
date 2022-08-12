@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # app:
+  #   container_name: book_store
+  #   build: .
+  #   ports:
+  #     - "${PORT}:${PORT}"
+  #   depends_on:
+  #     - database
+  #   environment:
+  #     PORT: ${PORT}
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_PORT: ${POSTGRES_PORT}
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #     POSTGRES_HOST: database
+  database:
+    env_file: config/dev.yml
+    image: postgres
+    container_name: postgres_db
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+    restart: on-failure
+volumes:
+  postgresdb: null
