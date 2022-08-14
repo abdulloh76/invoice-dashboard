@@ -13,7 +13,7 @@ var (
 
 type ConfigStruct struct {
 	PORT         string
-	POSTGRES_URI string
+	DATABASE_URL string
 }
 
 func GetEnvConfigs() *ConfigStruct {
@@ -31,10 +31,10 @@ func LoadConfig(configPath, configName, configType string) {
 	}
 
 	Configs.PORT = viper.GetString("PORT")
-	Configs.POSTGRES_URI = viper.GetString("POSTGRES_URI")
+	Configs.DATABASE_URL = viper.GetString("DATABASE_URL")
 }
 
 func InitializeFromOS() {
-	Configs.POSTGRES_URI = os.Getenv("DATABASE_URL")
+	Configs.DATABASE_URL = os.Getenv("DATABASE_URL")
 	Configs.PORT = os.Getenv("PORT")
 }

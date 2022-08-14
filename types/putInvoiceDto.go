@@ -1,7 +1,6 @@
-package invoiceDto
+package types
 
 import (
-	"invoice-dashboard/internal/entity"
 	"time"
 )
 
@@ -39,11 +38,11 @@ type PutInvoiceBody struct {
 	Items         PutItemsDto   `json:"items"`
 }
 
-func PostItemsToEntitities(newItems *[]PostItemDto, invoiceId string) []entity.Item {
-	var items []entity.Item = make([]entity.Item, len(*newItems))
+func PostItemsToEntitities(newItems *[]PostItemDto, invoiceId string) []ItemModel {
+	var items []ItemModel = make([]ItemModel, len(*newItems))
 
 	for i, dto := range *newItems {
-		items[i] = entity.Item{
+		items[i] = ItemModel{
 			InvoiceID: invoiceId,
 			Name:      dto.Name,
 			Quantity:  dto.Quantity,
