@@ -1,4 +1,4 @@
-package entity
+package types
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Invoice struct {
+type InvoiceModel struct {
 	gorm.Model
 	ID              string
 	PaymentDue      time.Time
@@ -19,13 +19,13 @@ type Invoice struct {
 	Status          string
 	SenderAddressId *uint64
 	ClientAddressId *uint64
-	SenderAddress   Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ClientAddress   Address `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Items           []Item  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	SenderAddress   AddressModel `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ClientAddress   AddressModel `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Items           []ItemModel  `gorm:"foreignKey:InvoiceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Total           float32
 }
 
-type Address struct {
+type AddressModel struct {
 	gorm.Model
 	ID       uint64
 	Street   string
@@ -34,7 +34,7 @@ type Address struct {
 	Country  string
 }
 
-type Item struct {
+type ItemModel struct {
 	gorm.Model
 	ID        uint64
 	InvoiceID string
@@ -44,7 +44,17 @@ type Item struct {
 	Total     float32
 }
 
-func (invoice *Invoice) BeforeCreate(tx *gorm.DB) (err error) {
+func (InvoiceModel) TableName() string {
+	return "invoices"
+}
+func (AddressModel) TableName() string {
+	return "address"
+}
+func (ItemModel) TableName() string {
+	return "items"
+}
+
+func (invoice *InvoiceModel) BeforeCreate(tx *gorm.DB) (err error) {
 	invoice.ID, err = shortid.Generate()
 
 	if err != nil {
