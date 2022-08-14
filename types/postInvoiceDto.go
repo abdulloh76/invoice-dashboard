@@ -1,7 +1,6 @@
-package invoiceDto
+package types
 
 import (
-	"invoice-dashboard/internal/entity"
 	"time"
 )
 
@@ -31,12 +30,12 @@ type InvoiceRequestBody struct {
 	Items         []PostItemDto  `json:"items"`
 }
 
-func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
-	var items []entity.Item = make([]entity.Item, len(dto.Items))
+func RequestDTOtoEntity(dto *InvoiceRequestBody) InvoiceModel {
+	var items []ItemModel = make([]ItemModel, len(dto.Items))
 	var total float32 = 0
 
 	for i, dtoItem := range dto.Items {
-		items[i] = entity.Item{
+		items[i] = ItemModel{
 			Name:     dtoItem.Name,
 			Quantity: dtoItem.Quantity,
 			Price:    dtoItem.Price,
@@ -45,20 +44,20 @@ func RequestDTOtoEntity(dto *InvoiceRequestBody) entity.Invoice {
 		total += dtoItem.Total
 	}
 
-	invoice := entity.Invoice{
+	invoice := InvoiceModel{
 		PaymentDue:   dto.PaymentDue,
 		Description:  dto.Description,
 		PaymentTerms: dto.PaymentTerms,
 		ClientName:   dto.ClientName,
 		ClientEmail:  dto.ClientEmail,
 		Status:       dto.Status,
-		SenderAddress: entity.Address{
+		SenderAddress: AddressModel{
 			Street:   dto.SenderAddress.Street,
 			City:     dto.SenderAddress.City,
 			PostCode: dto.SenderAddress.PostCode,
 			Country:  dto.SenderAddress.Country,
 		},
-		ClientAddress: entity.Address{
+		ClientAddress: AddressModel{
 			Street:   dto.ClientAddress.Street,
 			City:     dto.ClientAddress.City,
 			PostCode: dto.ClientAddress.PostCode,

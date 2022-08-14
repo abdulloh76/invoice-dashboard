@@ -1,9 +1,16 @@
-package invoiceDto
+package types
 
 import (
-	"invoice-dashboard/internal/entity"
 	"time"
 )
+
+type GetInvoicesResponse struct {
+	ID         string    `json:"id"`
+	PaymentDue time.Time `json:"paymentDue"`
+	ClientName string    `json:"clientName"`
+	Status     string    `json:"status"`
+	Total      float32   `json:"total"`
+}
 
 type GetAddressDto struct {
 	Street   string `json:"street"`
@@ -20,7 +27,7 @@ type GetItemDto struct {
 	Total    float32 `json:"total"`
 }
 
-type InvoiceResponse struct {
+type SingleInvoiceResponse struct {
 	ID            string        `json:"id"`
 	PaymentDue    time.Time     `json:"paymentDue"`
 	Description   string        `json:"description"`
@@ -36,7 +43,7 @@ type InvoiceResponse struct {
 	UpdatedAt     time.Time     `json:"updatedAt"`
 }
 
-func EntitytoResponsetDTO(invoice *entity.Invoice) InvoiceResponse {
+func EntitytoResponsetDTO(invoice *InvoiceModel) SingleInvoiceResponse {
 	var items []GetItemDto = make([]GetItemDto, len(invoice.Items))
 
 	for i, item := range invoice.Items {
@@ -49,7 +56,7 @@ func EntitytoResponsetDTO(invoice *entity.Invoice) InvoiceResponse {
 		}
 	}
 
-	getInvoiceDto := InvoiceResponse{
+	getInvoiceDto := SingleInvoiceResponse{
 		ID:           invoice.ID,
 		PaymentDue:   invoice.PaymentDue,
 		Description:  invoice.Description,
