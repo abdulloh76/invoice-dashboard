@@ -43,9 +43,9 @@ func (d *PostgresDBStore) FindInvoices() ([]types.GetInvoicesResponse, error) {
 }
 
 func (d *PostgresDBStore) FindInvoiceById(id string) (*types.InvoiceModel, error) {
-	var invoice types.InvoiceModel
+	var invoice *types.InvoiceModel
 	err := d.db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, "id = ?", id).Error
-	return &invoice, err
+	return invoice, err
 }
 
 func (d *PostgresDBStore) ModifyInvoice(curInvoice *types.InvoiceModel, modifiedInvoice types.PutInvoiceBody) error {

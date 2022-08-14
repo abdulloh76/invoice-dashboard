@@ -7,8 +7,6 @@ import (
 	"net/http"
 
 	"github.com/abdulloh76/invoice-dashboard/domain"
-	"github.com/abdulloh76/invoice-dashboard/internal/config"
-	"github.com/abdulloh76/invoice-dashboard/store"
 	"github.com/abdulloh76/invoice-dashboard/types"
 	"github.com/gin-gonic/gin"
 )
@@ -23,12 +21,7 @@ func NewGinAPIHandler(d *domain.Invoices) *GinAPIHandler {
 	}
 }
 
-func RegisterHandlers(router *gin.Engine) {
-	postgresDSN := config.Configs.POSTGRES_URI
-	postgreDB := store.NewPostgresDBStore(postgresDSN)
-	domain := domain.NewInvoicesDomain(postgreDB)
-	handler := NewGinAPIHandler(domain)
-
+func RegisterHandlers(router *gin.Engine, handler *GinAPIHandler) {
 	router.POST("/invoice", handler.CreateHandler)
 	router.GET("/invoice", handler.AllHandler)
 	router.GET("/invoice/:id", handler.GetHandler)
@@ -39,7 +32,9 @@ func RegisterHandlers(router *gin.Engine) {
 func (g *GinAPIHandler) AllHandler(context *gin.Context) {
 	allInvoices, err := g.invoices.AllInvoices()
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 
@@ -51,34 +46,48 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 
 	invoice, err := g.invoices.GetSingleInvoice(id)
 
-	if errors.Is(err, domain.ErrUserNotFound) {
-		context.AbortWithStatusJSON(http.StatusNotFound, err)
+	if errors.Is(err, domain.ErrInvoiceNotFound) {
+		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
-	context.JSON(http.StatusOK, invoice)
+
+	invoiceDto := types.EntitytoResponsetDTO(invoice)
+	context.JSON(http.StatusOK, invoiceDto)
 }
 
 func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 	body, err := io.ReadAll(context.Request.Body)
 	if err != nil {
-		log.Fatal(err)
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
 	}
 
 	newInvoice, err := g.invoices.Create(body)
 	if errors.Is(err, domain.ErrJsonUnmarshal) {
-		context.AbortWithStatusJSON(http.StatusBadRequest, err)
+		context.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 
-	context.AbortWithStatusJSON(http.StatusOK, newInvoice)
+	invoiceDto := types.EntitytoResponsetDTO(newInvoice)
+	context.JSON(http.StatusOK, invoiceDto)
 }
 
 func (g *GinAPIHandler) PutHandler(context *gin.Context) {
@@ -90,12 +99,22 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 	}
 
 	updatedInvoice, err := g.invoices.ModifyInvoice(id, body)
+	if errors.Is(err, domain.ErrInvoiceNotFound) {
+		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 	if errors.Is(err, domain.ErrJsonUnmarshal) {
-		context.AbortWithStatusJSON(http.StatusBadRequest, err)
+		context.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 
@@ -107,12 +126,16 @@ func (g *GinAPIHandler) DeleteHandler(context *gin.Context) {
 	id := context.Param("id")
 
 	err := g.invoices.DeleteInvoice(id)
-	if errors.Is(err, domain.ErrUserNotFound) {
-		context.AbortWithStatusJSON(http.StatusNotFound, err)
+	if errors.Is(err, domain.ErrInvoiceNotFound) {
+		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
 		return
 	}
 
