@@ -6,7 +6,7 @@ import (
 	"github.com/abdulloh76/invoice-dashboard/domain"
 	"github.com/abdulloh76/invoice-dashboard/handlers"
 	"github.com/abdulloh76/invoice-dashboard/internal/config"
-	"github.com/abdulloh76/invoice-dashboard/middleware"
+	"github.com/abdulloh76/invoice-dashboard/internal/middleware"
 	"github.com/abdulloh76/invoice-dashboard/store"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func main() {
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
 
-	postgresDSN := config.Configs.POSTGRES_URI
+	postgresDSN := config.Configs.DATABASE_URL
 	postgreDB := store.NewPostgresDBStore(postgresDSN)
 	domain := domain.NewInvoicesDomain(postgreDB)
 	handler := handlers.NewGinAPIHandler(domain)
