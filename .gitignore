@@ -17,3 +17,11 @@
 config/prod.yml
 
 .env
+
+
+.aws-sam
+.vscode
+bootstrap
+env-vars.json
+samconfig.toml
+bin

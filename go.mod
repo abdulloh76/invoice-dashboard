@@ -5,6 +5,7 @@ module github.com/abdulloh76/invoice-dashboard
 go 1.18
 
 require (
+	github.com/aws/aws-lambda-go v1.34.1
 	github.com/gin-gonic/gin v1.8.0
 	github.com/spf13/viper v1.12.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
@@ -52,5 +53,5 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
