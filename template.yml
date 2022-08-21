@@ -9,9 +9,6 @@ Globals:
     Runtime: provided.al2
     Timeout: 5
     Tracing: Active
-    Environment:
-      Variables:
-        TABLE: !Ref Table
 
 Resources:
   GetAllInvoicesFunction:
