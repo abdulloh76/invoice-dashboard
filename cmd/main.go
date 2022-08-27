@@ -25,8 +25,9 @@ func main() {
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
 
-	postgresDSN := config.Configs.DATABASE_URL
-	postgreDB := store.NewPostgresDBStore(postgresDSN)
+	store.NewRedisCacheStore(config.Configs.REDIS_URL, 1, 10)
+
+	postgreDB := store.NewPostgresDBStore(config.Configs.DATABASE_URL)
 	domain := domain.NewInvoicesDomain(postgreDB)
 	handler := handlers.NewGinAPIHandler(domain)
 

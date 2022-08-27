@@ -20,14 +20,27 @@ services:
     image: postgres
     container_name: postgres_db
     ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
       - postgresdb:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DATABASE}
-      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DATABASE}
+      POSTGRES_HOST: ${DATABASE_HOST}
     restart: on-failure
+  caching:
+    env_file: config/dev.yml
+    image: redis:7.0
+    container_name: redis_store
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USER: ${REDIS_USER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    restart: on-failure
+    
 volumes:
   postgresdb: null
