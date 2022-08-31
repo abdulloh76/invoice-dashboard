@@ -1,20 +1,6 @@
 version: '3.8'
 
 services:
-  # app:
-  #   container_name: book_store
-  #   build: .
-  #   ports:
-  #     - "${PORT}:${PORT}"
-  #   depends_on:
-  #     - database
-  #   environment:
-  #     PORT: ${PORT}
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_PORT: ${POSTGRES_PORT}
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #     POSTGRES_HOST: database
   database:
     env_file: config/dev.yml
     image: postgres
@@ -33,13 +19,14 @@ services:
     env_file: config/dev.yml
     image: redis:7.0
     container_name: redis_store
-    ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
     environment:
+      REDIS_PORT_NUMBER: ${REDIS_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_USER: ${REDIS_USER}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
     restart: on-failure
     
 volumes:

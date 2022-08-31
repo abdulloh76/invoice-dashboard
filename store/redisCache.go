@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/abdulloh76/invoice-dashboard/types"
@@ -13,6 +14,8 @@ type RedisCacheStore struct {
 	expires time.Duration
 	client  *redis.Client
 }
+
+var _ types.InvoiceCacheStore = (*RedisCacheStore)(nil)
 
 func NewRedisCacheStore(address string, db int, expires time.Duration) *RedisCacheStore {
 	redisClient := redis.NewClient(&redis.Options{
@@ -26,8 +29,8 @@ func NewRedisCacheStore(address string, db int, expires time.Duration) *RedisCac
 	}
 }
 
-func (r *RedisCacheStore) Set(ctx context.Context, key string, post *types.InvoiceModel) {
-	json, err := json.Marshal(post)
+func (r *RedisCacheStore) Set(ctx context.Context, key string, invoice *types.InvoiceModel) {
+	json, err := json.Marshal(invoice)
 	if err != nil {
 		panic(err)
 	}
@@ -41,11 +44,22 @@ func (r *RedisCacheStore) Get(ctx context.Context, key string) *types.InvoiceMod
 		return nil
 	}
 
-	post := types.InvoiceModel{}
-	err = json.Unmarshal([]byte(val), &post)
+	invoice := types.InvoiceModel{}
+	err = json.Unmarshal([]byte(val), &invoice)
 	if err != nil {
 		panic(err)
 	}
 
-	return &post
+	return &invoice
+}
+
+func (r *RedisCacheStore) Delete(ctx context.Context, key string) error {
+	confirmation, err := r.client.Del(ctx, key).Result()
+	if err != nil {
+		return err
+	}
+	if confirmation == 0 {
+		return errors.New("smth went wrong could not remove from redis")
+	}
+	return nil
 }
