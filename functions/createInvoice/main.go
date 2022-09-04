@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/abdulloh76/invoice-dashboard/domain"
 	"github.com/abdulloh76/invoice-dashboard/handlers"
@@ -15,8 +16,15 @@ func main() {
 		panic("Need DATABASE_URL environment variable")
 	}
 
+	var cacheExpireDuration time.Duration = 600
+	redisURL, ok := os.LookupEnv("REDIS_URL")
+	if !ok {
+		panic("Need REDIS_URL environment variable")
+	}
+
+	cache := store.NewRedisCacheStore(redisURL, cacheExpireDuration)
 	postgreDB := store.NewPostgresDBStore(postgresDSN)
-	domain := domain.NewInvoicesDomain(postgreDB)
+	domain := domain.NewInvoicesDomain(postgreDB, cache)
 	handler := handlers.NewAPIGatewayHandler(domain)
 
 	lambda.Start(handler.CreateHandler)
