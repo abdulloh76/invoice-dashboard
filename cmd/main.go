@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/abdulloh76/invoice-dashboard/domain"
 	"github.com/abdulloh76/invoice-dashboard/handlers"
@@ -22,12 +23,14 @@ func init() {
 }
 
 func main() {
+	var cacheExpireDuration time.Duration = 600
+
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
 
-	postgresDSN := config.Configs.DATABASE_URL
-	postgreDB := store.NewPostgresDBStore(postgresDSN)
-	domain := domain.NewInvoicesDomain(postgreDB)
+	cache := store.NewRedisCacheStore(config.Configs.REDIS_URL, cacheExpireDuration)
+	postgreDB := store.NewPostgresDBStore(config.Configs.DATABASE_URL)
+	domain := domain.NewInvoicesDomain(postgreDB, cache)
 	handler := handlers.NewGinAPIHandler(domain)
 
 	handlers.RegisterHandlers(router, handler)
