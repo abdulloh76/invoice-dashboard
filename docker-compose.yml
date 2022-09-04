@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   database:
-    env_file: config/dev.yml
     image: postgres
     container_name: postgres_db
     ports:
@@ -16,14 +15,12 @@ services:
       POSTGRES_HOST: ${DATABASE_HOST}
     restart: on-failure
   caching:
-    env_file: config/dev.yml
     image: redis:7.0
     container_name: redis_store
+    command: redis-server
     environment:
-      REDIS_PORT_NUMBER: ${REDIS_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
-      REDIS_USER: ${REDIS_USER}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"

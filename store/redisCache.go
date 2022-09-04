@@ -17,10 +17,11 @@ type RedisCacheStore struct {
 
 var _ types.InvoiceCacheStore = (*RedisCacheStore)(nil)
 
-func NewRedisCacheStore(address string, db int, expires time.Duration) *RedisCacheStore {
+func NewRedisCacheStore(address, password string, db int, expires time.Duration) *RedisCacheStore {
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: address,
-		DB:   db,
+		Addr:     address,
+		DB:       db,
+		Password: password,
 	})
 
 	return &RedisCacheStore{

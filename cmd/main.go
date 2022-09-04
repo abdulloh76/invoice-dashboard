@@ -29,7 +29,7 @@ func main() {
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
 
-	cache := store.NewRedisCacheStore(config.Configs.REDIS_URL, cacheDBNumber, cacheExpireDuration)
+	cache := store.NewRedisCacheStore(config.Configs.REDIS_ADDRESS, config.Configs.REDIS_PASSWORD, cacheDBNumber, cacheExpireDuration)
 	postgreDB := store.NewPostgresDBStore(config.Configs.DATABASE_URL)
 	domain := domain.NewInvoicesDomain(postgreDB, cache)
 	handler := handlers.NewGinAPIHandler(domain)
