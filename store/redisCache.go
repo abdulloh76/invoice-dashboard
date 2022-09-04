@@ -17,12 +17,12 @@ type RedisCacheStore struct {
 
 var _ types.InvoiceCacheStore = (*RedisCacheStore)(nil)
 
-func NewRedisCacheStore(address, password string, db int, expires time.Duration) *RedisCacheStore {
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     address,
-		DB:       db,
-		Password: password,
-	})
+func NewRedisCacheStore(url string, expires time.Duration) *RedisCacheStore {
+	redisOptions, err := redis.ParseURL(url)
+	if err != nil {
+		panic(err)
+	}
+	redisClient := redis.NewClient(redisOptions)
 
 	return &RedisCacheStore{
 		client:  redisClient,
