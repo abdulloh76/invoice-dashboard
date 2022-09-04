@@ -12,8 +12,10 @@ var (
 )
 
 type ConfigStruct struct {
-	PORT         string
-	DATABASE_URL string
+	PORT           string
+	DATABASE_URL   string
+	REDIS_PASSWORD string
+	REDIS_ADDRESS  string
 }
 
 func GetEnvConfigs() *ConfigStruct {
@@ -32,9 +34,13 @@ func LoadConfig(configPath, configName, configType string) {
 
 	Configs.PORT = viper.GetString("PORT")
 	Configs.DATABASE_URL = viper.GetString("DATABASE_URL")
+	Configs.REDIS_PASSWORD = viper.GetString("REDIS_PASSWORD")
+	Configs.REDIS_ADDRESS = viper.GetString("REDIS_ADDRESS")
 }
 
 func InitializeFromOS() {
-	Configs.DATABASE_URL = os.Getenv("DATABASE_URL")
 	Configs.PORT = os.Getenv("PORT")
+	Configs.DATABASE_URL = os.Getenv("DATABASE_URL")
+	Configs.REDIS_PASSWORD = os.Getenv("REDIS_PASSWORD")
+	Configs.REDIS_ADDRESS = os.Getenv("REDIS_ADDRESS")
 }
