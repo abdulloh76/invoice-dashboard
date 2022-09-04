@@ -17,3 +17,8 @@
 config/prod.yml
 
 .env
+
+.aws-sam
+bootstrap
+env-vars.json
+samconfig.toml
