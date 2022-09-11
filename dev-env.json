@@ -1,0 +1,22 @@
+{
+  "GetAllInvoicesFunction": {
+    "DATABASE_URL": "postgres://postgres:postgres@localhost:5432/postgres",
+    "REDIS_URL": "redis://:password@localhost:6379"
+  },
+  "GetInvoiceByIdFunction": {
+    "DATABASE_URL": "postgres://postgres:postgres@localhost:5432/postgres",
+    "REDIS_URL": "redis://:password@localhost:6379"
+  },
+  "RemoveInvoiceFunction": {
+    "DATABASE_URL": "postgres://postgres:postgres@localhost:5432/postgres",
+    "REDIS_URL": "redis://:password@localhost:6379"
+  },
+  "ModifyInvoiceFunction": {
+    "DATABASE_URL": "postgres://postgres:postgres@localhost:5432/postgres",
+    "REDIS_URL": "redis://:password@localhost:6379"
+  },
+  "CreateInvoiceFunction": {
+    "DATABASE_URL": "postgres://postgres:postgres@localhost:5432/postgres",
+    "REDIS_URL": "redis://:password@localhost:6379"
+  }
+}
