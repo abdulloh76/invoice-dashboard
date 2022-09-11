@@ -7,7 +7,7 @@ Globals:
     Architectures: ["arm64"]
     Handler: bootstrap
     Runtime: provided.al2
-    Timeout: 5
+    Timeout: 100
     Tracing: Active
 
 Resources:
@@ -15,6 +15,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/getInvoices/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
       Events:
         Api:
           Type: HttpApi
@@ -28,13 +32,15 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: '*'
-    Metadata:
-      BuildMethod: makefile
 
   GetInvoiceByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/getInvoiceById/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
       Events:
         Api:
           Type: HttpApi
@@ -48,13 +54,15 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: '*'
-    Metadata:
-      BuildMethod: makefile
 
   RemoveInvoiceFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/removeInvoice/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
       Events:
         Api:
           Type: HttpApi
@@ -68,13 +76,15 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: '*'
-    Metadata:
-      BuildMethod: makefile
 
   ModifyInvoiceFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/modifyInvoice/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
       Events:
         Api:
           Type: HttpApi
@@ -88,13 +98,15 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: '*'
-    Metadata:
-      BuildMethod: makefile
 
   CreateInvoiceFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/createInvoice/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
       Events:
         Api:
           Type: HttpApi
@@ -108,10 +120,3 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: '*'
-    Metadata:
-      BuildMethod: makefile
-
-# Outputs:
-#   ApiUrl:
-#     Description: "API Gateway endpoint URL"
-#     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/"
