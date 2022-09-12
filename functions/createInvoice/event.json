@@ -1,0 +1,15 @@
+{
+  "body": "{\"paymentDue\":\"2021-08-19T17:23:21.349752+05:00\",\"description\":\"Graphic Design\",\"paymentTerms\":10,\"clientName\":\"John Wick\",\"clientEmail\":\"johnwick@mail.com\",\"status\":\"paid\",\"senderAddress\":{\"street\":\"19 Brooklyn\",\"city\":\"New York\",\"postCode\":\"E1 3EZ\",\"country\":\"USA\"},\"clientAddress\":{\"street\":\"19 Union Terrace\",\"city\":\"London \",\"postCode\":\"E1 3EZ\",\"country\":\"United Kingdom\"},\"items\":[{\"name\":\"Brand Guidelines\",\"quantity\":1,\"price\":1000,\"total\":1000},{\"name\":\"Email Design\",\"quantity\":2,\"price\":200,\"total\":400}]}",
+  "resource": "/",
+  "path": "/",
+  "httpMethod": "POST",
+  "isBase64Encoded": true,
+  "queryStringParameters": {
+    "foo": "bar"
+  },
+  "multiValueQueryStringParameters": {
+    "foo": [
+      "bar"
+    ]
+  }
+}

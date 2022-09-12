@@ -1,0 +1,14 @@
+{
+  "resource": "/",
+  "path": "/",
+  "httpMethod": "GET",
+  "isBase64Encoded": true,
+  "queryStringParameters": {
+    "foo": "bar"
+  },
+  "multiValueQueryStringParameters": {
+    "foo": [
+      "bar"
+    ]
+  }
+}

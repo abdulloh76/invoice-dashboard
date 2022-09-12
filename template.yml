@@ -1,0 +1,122 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    MemorySize: 128
+    Architectures: ["arm64"]
+    Handler: bootstrap
+    Runtime: provided.al2
+    Timeout: 100
+    Tracing: Active
+
+Resources:
+  GetAllInvoicesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/getInvoices/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /invoice
+            Method: GET
+      Policies:
+        - Version: "2012-10-17"
+          Statement: 
+          - Effect: "Allow"
+            Action: 
+              - "lambda:InvokeFunction"
+            Resource: '*'
+
+  GetInvoiceByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/getInvoiceById/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /invoice/{id}
+            Method: GET
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action: 
+              - "lambda:InvokeFunction"
+            Resource: '*'
+
+  RemoveInvoiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/removeInvoice/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /invoice/{id}
+            Method: DELETE
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action: 
+              - "lambda:InvokeFunction"
+            Resource: '*'
+
+  ModifyInvoiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/modifyInvoice/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /invoice/{id}
+            Method: PUT
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action: 
+              - "lambda:InvokeFunction"
+            Resource: '*'
+
+  CreateInvoiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/createInvoice/
+      Environment:
+        Variables:
+          DATABASE_URL: "database-surl"
+          REDIS_URL: "redis-surl"
+      Events:
+        Api:
+          Type: HttpApi
+          Properties:
+            Path: /invoice
+            Method: POST
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action: 
+              - "lambda:InvokeFunction"
+            Resource: '*'
