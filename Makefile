@@ -10,6 +10,13 @@ GO := go
 CC := aarch64-linux-gnu-gcc
 GCCGO := aarch64-linux-gnu-gccgo-10
 
+run-containers:
+		docker compose --env-file ./config/dev.yml up
+build-cmd:
+		go build -o bin/main -v cmd/main.go
+run-cmd:
+		bin/main
+
 build:
 		${MAKE} ${MAKEOPTS} $(foreach function,${FUNCTIONS}, build-${function})
 
