@@ -1,5 +1,6 @@
 @rootUrl = http://localhost:8080
 # @rootUrl = https://serene-plains-38345.herokuapp.com
+# @rootUrl = https://kjg2r2wpii.execute-api.us-east-1.amazonaws.com
 
 get {{rootUrl}}/invoice
 
