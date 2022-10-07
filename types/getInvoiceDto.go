@@ -43,7 +43,7 @@ type SingleInvoiceResponse struct {
 	UpdatedAt     time.Time     `json:"updatedAt"`
 }
 
-func EntitytoResponsetDTO(invoice *InvoiceModel) SingleInvoiceResponse {
+func EntityToResponseDTO(invoice *InvoiceModel, senderAddress *GetAddressDto) SingleInvoiceResponse {
 	var items []GetItemDto = make([]GetItemDto, len(invoice.Items))
 
 	for i, item := range invoice.Items {
@@ -65,10 +65,10 @@ func EntitytoResponsetDTO(invoice *InvoiceModel) SingleInvoiceResponse {
 		ClientEmail:  invoice.ClientEmail,
 		Status:       invoice.Status,
 		SenderAddress: GetAddressDto{
-			Street:   invoice.SenderAddress.Street,
-			City:     invoice.SenderAddress.City,
-			PostCode: invoice.SenderAddress.PostCode,
-			Country:  invoice.SenderAddress.Country,
+			Street:   senderAddress.Street,
+			City:     senderAddress.City,
+			PostCode: senderAddress.PostCode,
+			Country:  senderAddress.Country,
 		},
 		ClientAddress: GetAddressDto{
 			Street:   invoice.ClientAddress.Street,
