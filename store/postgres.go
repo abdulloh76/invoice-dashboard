@@ -44,14 +44,13 @@ func (d *PostgresDBStore) FindInvoices() ([]types.GetInvoicesResponse, error) {
 
 func (d *PostgresDBStore) FindInvoiceById(id string) (*types.InvoiceModel, error) {
 	var invoice *types.InvoiceModel
-	err := d.db.Preload("Items").Preload("SenderAddress").Preload("ClientAddress").First(&invoice, "id = ?", id).Error
+	err := d.db.Preload("Items").Preload("ClientAddress").First(&invoice, "id = ?", id).Error
 	return invoice, err
 }
 
 func (d *PostgresDBStore) ModifyInvoice(curInvoice *types.InvoiceModel, modifiedInvoice types.PutInvoiceBody) error {
 	return d.db.Transaction(func(tx *gorm.DB) error {
 		modifyAddress(&curInvoice.ClientAddress, &modifiedInvoice.ClientAddress)
-		modifyAddress(&curInvoice.SenderAddress, &modifiedInvoice.SenderAddress)
 
 		batchUpdateItems(curInvoice.Items, modifiedInvoice.Items.ModifiedItems)
 
