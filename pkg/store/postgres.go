@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/abdulloh76/invoice-dashboard/types"
+	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

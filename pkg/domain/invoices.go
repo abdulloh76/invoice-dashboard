@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/abdulloh76/invoice-dashboard/types"
+	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 )
 
 var (

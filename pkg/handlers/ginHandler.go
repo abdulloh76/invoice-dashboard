@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/abdulloh76/invoice-dashboard/domain"
-	"github.com/abdulloh76/invoice-dashboard/types"
+	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
+	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 	"github.com/gin-gonic/gin"
 )
 

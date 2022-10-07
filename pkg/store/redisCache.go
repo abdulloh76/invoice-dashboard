@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/abdulloh76/invoice-dashboard/types"
+	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 	"github.com/go-redis/redis/v9"
 )
 

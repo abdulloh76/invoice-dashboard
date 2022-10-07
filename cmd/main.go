@@ -3,20 +3,19 @@ package main
 import (
 	"os"
 
-	"github.com/abdulloh76/invoice-dashboard/domain"
-	"github.com/abdulloh76/invoice-dashboard/handlers"
-	"github.com/abdulloh76/invoice-dashboard/internal/config"
-	"github.com/abdulloh76/invoice-dashboard/internal/middleware"
-	"github.com/abdulloh76/invoice-dashboard/store"
+	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
+	"github.com/abdulloh76/invoice-dashboard/pkg/handlers"
+	"github.com/abdulloh76/invoice-dashboard/pkg/store"
+	"github.com/abdulloh76/invoice-dashboard/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	router := gin.Default()
-	router.Use(middleware.CORSMiddleware())
+	router.Use(utils.CORSMiddleware())
 
-	configs := config.InitializeConfigs()
+	configs := utils.InitializeConfigs()
 	cache := store.NewRedisCacheStore(configs.REDIS_URL, configs.CACHE_EXPIRATION)
 	postgreDB := store.NewPostgresDBStore(configs.DATABASE_URL)
 	domain := domain.NewInvoicesDomain(postgreDB, cache)
