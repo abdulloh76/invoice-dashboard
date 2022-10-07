@@ -59,7 +59,10 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 		return
 	}
 
-	invoiceDto := types.EntitytoResponsetDTO(invoice)
+	// todo will be updated when gRPC client implemented
+	senderAddress := &types.GetAddressDto{}
+
+	invoiceDto := types.EntityToResponseDTO(invoice, senderAddress)
 	context.JSON(http.StatusOK, invoiceDto)
 }
 
@@ -86,7 +89,10 @@ func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 		return
 	}
 
-	invoiceDto := types.EntitytoResponsetDTO(newInvoice)
+	// todo will be updated when gRPC client implemented
+	senderAddress := &types.GetAddressDto{}
+
+	invoiceDto := types.EntityToResponseDTO(newInvoice, senderAddress)
 	context.JSON(http.StatusOK, invoiceDto)
 }
 
@@ -118,7 +124,10 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 		return
 	}
 
-	invoice := types.EntitytoResponsetDTO(updatedInvoice)
+	// todo will be updated when gRPC client implemented
+	senderAddress := &types.GetAddressDto{}
+
+	invoice := types.EntityToResponseDTO(updatedInvoice, senderAddress)
 	context.JSON(http.StatusOK, invoice)
 }
 
