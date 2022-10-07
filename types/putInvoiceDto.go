@@ -33,7 +33,6 @@ type PutInvoiceBody struct {
 	ClientName    string        `json:"clientName"`
 	ClientEmail   string        `json:"clientEmail"`
 	Status        string        `json:"status"`
-	SenderAddress PutAddressDto `json:"senderAddress"`
 	ClientAddress PutAddressDto `json:"clientAddress"`
 	Items         PutItemsDto   `json:"items"`
 }

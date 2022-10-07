@@ -17,9 +17,7 @@ type InvoiceModel struct {
 	ClientName      string
 	ClientEmail     string
 	Status          string
-	SenderAddressId *uint64
 	ClientAddressId *uint64
-	SenderAddress   AddressModel `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	ClientAddress   AddressModel `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Items           []ItemModel  `gorm:"foreignKey:InvoiceID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Total           float32

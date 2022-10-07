@@ -25,7 +25,6 @@ type InvoiceRequestBody struct {
 	ClientName    string         `json:"clientName"`
 	ClientEmail   string         `json:"clientEmail"`
 	Status        string         `json:"status"`
-	SenderAddress PostAddressDto `json:"senderAddress"`
 	ClientAddress PostAddressDto `json:"clientAddress"`
 	Items         []PostItemDto  `json:"items"`
 }
@@ -51,12 +50,6 @@ func RequestDTOtoEntity(dto *InvoiceRequestBody) InvoiceModel {
 		ClientName:   dto.ClientName,
 		ClientEmail:  dto.ClientEmail,
 		Status:       dto.Status,
-		SenderAddress: AddressModel{
-			Street:   dto.SenderAddress.Street,
-			City:     dto.SenderAddress.City,
-			PostCode: dto.SenderAddress.PostCode,
-			Country:  dto.SenderAddress.Country,
-		},
 		ClientAddress: AddressModel{
 			Street:   dto.ClientAddress.Street,
 			City:     dto.ClientAddress.City,
