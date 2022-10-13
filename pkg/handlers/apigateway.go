@@ -8,21 +8,24 @@ import (
 	"strings"
 
 	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
+	"github.com/abdulloh76/invoice-dashboard/pkg/infrastructure"
 	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 	"github.com/aws/aws-lambda-go/events"
 )
 
 type APIGatewayHandler struct {
-	invoices *domain.Invoices
+	invoices       *domain.Invoices
+	userGrpcClient *infrastructure.UserGrpcClient
 }
 
-func NewAPIGatewayHandler(d *domain.Invoices) *APIGatewayHandler {
+func NewAPIGatewayHandler(d *domain.Invoices, userGrpcClient *infrastructure.UserGrpcClient) *APIGatewayHandler {
 	return &APIGatewayHandler{
-		invoices: d,
+		invoices:       d,
+		userGrpcClient: userGrpcClient,
 	}
 }
 
-func (g *APIGatewayHandler) AllHandler(event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (g *APIGatewayHandler) AllHandler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	allInvoices, err := g.invoices.AllInvoices()
 	if err != nil {
 		return errResponse(http.StatusInternalServerError, err.Error()), nil
@@ -47,13 +50,16 @@ func (g *APIGatewayHandler) GetHandler(ctx context.Context, event events.APIGate
 	}
 
 	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	senderAddress, err := g.userGrpcClient.GetUserAddress(ctx, "mHVxHT4VR")
+	if err != nil {
+		return errResponse(http.StatusInternalServerError, err.Error()), nil
+	}
 
 	invoiceDto := types.EntityToResponseDTO(invoice, senderAddress)
 	return response(http.StatusOK, invoiceDto), nil
 }
 
-func (g *APIGatewayHandler) CreateHandler(event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (g *APIGatewayHandler) CreateHandler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if strings.TrimSpace(event.Body) == "" {
 		return errResponse(http.StatusBadRequest, "empty request body"), nil
 	}
@@ -67,13 +73,16 @@ func (g *APIGatewayHandler) CreateHandler(event events.APIGatewayProxyRequest) (
 	}
 
 	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	senderAddress, err := g.userGrpcClient.GetUserAddress(ctx, "mHVxHT4VR")
+	if err != nil {
+		return errResponse(http.StatusInternalServerError, err.Error()), nil
+	}
 
 	invoiceDto := types.EntityToResponseDTO(newInvoice, senderAddress)
 	return response(http.StatusOK, invoiceDto), nil
 }
 
-func (g *APIGatewayHandler) PutHandler(event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (g *APIGatewayHandler) PutHandler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	id, ok := event.PathParameters["id"]
 	if !ok {
 		return errResponse(http.StatusBadRequest, "missing 'id' parameter in path"), nil
@@ -95,13 +104,16 @@ func (g *APIGatewayHandler) PutHandler(event events.APIGatewayProxyRequest) (eve
 	}
 
 	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	senderAddress, err := g.userGrpcClient.GetUserAddress(ctx, "mHVxHT4VR")
+	if err != nil {
+		return errResponse(http.StatusInternalServerError, err.Error()), nil
+	}
 
 	invoice := types.EntityToResponseDTO(updatedInvoice, senderAddress)
 	return response(http.StatusOK, invoice), nil
 }
 
-func (g *APIGatewayHandler) DeleteHandler(event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (g *APIGatewayHandler) DeleteHandler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	id, ok := event.PathParameters["id"]
 	if !ok {
 		return errResponse(http.StatusBadRequest, "missing 'id' parameter in path"), nil

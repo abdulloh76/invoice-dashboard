@@ -7,17 +7,20 @@ import (
 	"net/http"
 
 	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
+	"github.com/abdulloh76/invoice-dashboard/pkg/infrastructure"
 	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 	"github.com/gin-gonic/gin"
 )
 
 type GinAPIHandler struct {
-	invoices *domain.Invoices
+	invoices       *domain.Invoices
+	userGrpcClient *infrastructure.UserGrpcClient
 }
 
-func NewGinAPIHandler(d *domain.Invoices) *GinAPIHandler {
+func NewGinAPIHandler(d *domain.Invoices, userGrpcClient *infrastructure.UserGrpcClient) *GinAPIHandler {
 	return &GinAPIHandler{
-		invoices: d,
+		invoices:       d,
+		userGrpcClient: userGrpcClient,
 	}
 }
 
@@ -60,7 +63,13 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 	}
 
 	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	invoiceDto := types.EntityToResponseDTO(invoice, senderAddress)
 	context.JSON(http.StatusOK, invoiceDto)
@@ -90,7 +99,13 @@ func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 	}
 
 	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	invoiceDto := types.EntityToResponseDTO(newInvoice, senderAddress)
 	context.JSON(http.StatusOK, invoiceDto)
@@ -125,7 +140,13 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 	}
 
 	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	invoice := types.EntityToResponseDTO(updatedInvoice, senderAddress)
 	context.JSON(http.StatusOK, invoice)
