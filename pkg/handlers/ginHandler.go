@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"github.com/abdulloh76/invoice-dashboard/pkg/utils"
 	"io"
 	"log"
 	"net/http"
@@ -49,7 +50,7 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 
 	invoice, err := g.invoices.GetSingleInvoice(id)
 
-	if errors.Is(err, domain.ErrInvoiceNotFound) {
+	if errors.Is(err, utils.ErrInvoiceNotFound) {
 		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
 		})
@@ -62,7 +63,7 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 		return
 	}
 
-	// todo will be updated when gRPC client implemented
+	// todo will be updated when getting user_id configured
 	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
@@ -85,7 +86,7 @@ func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 	}
 
 	newInvoice, err := g.invoices.Create(body)
-	if errors.Is(err, domain.ErrJsonUnmarshal) {
+	if errors.Is(err, utils.ErrJsonUnmarshal) {
 		context.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
 			"message": err.Error(),
 		})
@@ -98,7 +99,7 @@ func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 		return
 	}
 
-	// todo will be updated when gRPC client implemented
+	// todo will be updated when getting user_id configured
 	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
@@ -120,13 +121,13 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 	}
 
 	updatedInvoice, err := g.invoices.ModifyInvoice(id, body)
-	if errors.Is(err, domain.ErrInvoiceNotFound) {
+	if errors.Is(err, utils.ErrInvoiceNotFound) {
 		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
 		})
 		return
 	}
-	if errors.Is(err, domain.ErrJsonUnmarshal) {
+	if errors.Is(err, utils.ErrJsonUnmarshal) {
 		context.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
 			"message": err.Error(),
 		})
@@ -139,7 +140,7 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 		return
 	}
 
-	// todo will be updated when gRPC client implemented
+	// todo will be updated when getting user_id configured
 	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
@@ -156,7 +157,7 @@ func (g *GinAPIHandler) DeleteHandler(context *gin.Context) {
 	id := context.Param("id")
 
 	err := g.invoices.DeleteInvoice(id)
-	if errors.Is(err, domain.ErrInvoiceNotFound) {
+	if errors.Is(err, utils.ErrInvoiceNotFound) {
 		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
 		})
