@@ -3,14 +3,9 @@ package domain
 import (
 	"context"
 	"encoding/json"
-	"errors"
+	"github.com/abdulloh76/invoice-dashboard/pkg/utils"
 
 	"github.com/abdulloh76/invoice-dashboard/pkg/types"
-)
-
-var (
-	ErrJsonUnmarshal   = errors.New("failed to parse invoice from request body")
-	ErrInvoiceNotFound = errors.New("invoice with given ID not found")
 )
 
 type Invoices struct {
@@ -33,7 +28,7 @@ func (i *Invoices) GetSingleInvoice(id string) (*types.InvoiceModel, error) {
 	if invoice == nil {
 		invoice, err = i.store.FindInvoiceById(id)
 		if invoice.ID == "" {
-			return nil, ErrInvoiceNotFound
+			return nil, utils.ErrInvoiceNotFound
 		}
 		if err != nil {
 			return nil, err
@@ -58,7 +53,7 @@ func (i *Invoices) Create(body []byte) (*types.InvoiceModel, error) {
 	ctx := context.Background()
 	invoice := types.InvoiceRequestBody{}
 	if err := json.Unmarshal(body, &invoice); err != nil {
-		return nil, ErrJsonUnmarshal
+		return nil, utils.ErrJsonUnmarshal
 	}
 
 	newInvoice := types.RequestDTOtoEntity(&invoice)
@@ -76,7 +71,7 @@ func (i *Invoices) ModifyInvoice(id string, body []byte) (*types.InvoiceModel, e
 	ctx := context.Background()
 	curInvoice, err := i.store.FindInvoiceById(id)
 	if curInvoice == nil {
-		return nil, ErrInvoiceNotFound
+		return nil, utils.ErrInvoiceNotFound
 	}
 	if err != nil {
 		return nil, err
@@ -84,7 +79,7 @@ func (i *Invoices) ModifyInvoice(id string, body []byte) (*types.InvoiceModel, e
 
 	modifiedInvoice := types.PutInvoiceBody{}
 	if err := json.Unmarshal(body, &modifiedInvoice); err != nil {
-		return nil, ErrJsonUnmarshal
+		return nil, utils.ErrJsonUnmarshal
 	}
 
 	modifyErr := i.store.ModifyInvoice(curInvoice, modifiedInvoice)

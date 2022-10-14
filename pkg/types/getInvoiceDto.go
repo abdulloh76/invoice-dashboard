@@ -43,7 +43,7 @@ type SingleInvoiceResponse struct {
 	UpdatedAt     time.Time     `json:"updatedAt"`
 }
 
-func EntityToResponseDTO(invoice *InvoiceModel, senderAddress *GetAddressDto) SingleInvoiceResponse {
+func EntityToResponseDTO(invoice *InvoiceModel, senderAddress *AddressModel) SingleInvoiceResponse {
 	var items []GetItemDto = make([]GetItemDto, len(invoice.Items))
 
 	for i, item := range invoice.Items {

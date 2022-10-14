@@ -2,22 +2,26 @@ package handlers
 
 import (
 	"errors"
+	"github.com/abdulloh76/invoice-dashboard/pkg/utils"
 	"io"
 	"log"
 	"net/http"
 
 	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
+	"github.com/abdulloh76/invoice-dashboard/pkg/infrastructure"
 	"github.com/abdulloh76/invoice-dashboard/pkg/types"
 	"github.com/gin-gonic/gin"
 )
 
 type GinAPIHandler struct {
-	invoices *domain.Invoices
+	invoices       *domain.Invoices
+	userGrpcClient *infrastructure.UserGrpcClient
 }
 
-func NewGinAPIHandler(d *domain.Invoices) *GinAPIHandler {
+func NewGinAPIHandler(d *domain.Invoices, userGrpcClient *infrastructure.UserGrpcClient) *GinAPIHandler {
 	return &GinAPIHandler{
-		invoices: d,
+		invoices:       d,
+		userGrpcClient: userGrpcClient,
 	}
 }
 
@@ -46,7 +50,7 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 
 	invoice, err := g.invoices.GetSingleInvoice(id)
 
-	if errors.Is(err, domain.ErrInvoiceNotFound) {
+	if errors.Is(err, utils.ErrInvoiceNotFound) {
 		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
 		})
@@ -59,8 +63,14 @@ func (g *GinAPIHandler) GetHandler(context *gin.Context) {
 		return
 	}
 
-	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	// todo will be updated when getting user_id configured
+	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	invoiceDto := types.EntityToResponseDTO(invoice, senderAddress)
 	context.JSON(http.StatusOK, invoiceDto)
@@ -76,7 +86,7 @@ func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 	}
 
 	newInvoice, err := g.invoices.Create(body)
-	if errors.Is(err, domain.ErrJsonUnmarshal) {
+	if errors.Is(err, utils.ErrJsonUnmarshal) {
 		context.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
 			"message": err.Error(),
 		})
@@ -89,8 +99,14 @@ func (g *GinAPIHandler) CreateHandler(context *gin.Context) {
 		return
 	}
 
-	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	// todo will be updated when getting user_id configured
+	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	invoiceDto := types.EntityToResponseDTO(newInvoice, senderAddress)
 	context.JSON(http.StatusOK, invoiceDto)
@@ -105,13 +121,13 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 	}
 
 	updatedInvoice, err := g.invoices.ModifyInvoice(id, body)
-	if errors.Is(err, domain.ErrInvoiceNotFound) {
+	if errors.Is(err, utils.ErrInvoiceNotFound) {
 		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
 		})
 		return
 	}
-	if errors.Is(err, domain.ErrJsonUnmarshal) {
+	if errors.Is(err, utils.ErrJsonUnmarshal) {
 		context.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
 			"message": err.Error(),
 		})
@@ -124,8 +140,14 @@ func (g *GinAPIHandler) PutHandler(context *gin.Context) {
 		return
 	}
 
-	// todo will be updated when gRPC client implemented
-	senderAddress := &types.GetAddressDto{}
+	// todo will be updated when getting user_id configured
+	senderAddress, err := g.userGrpcClient.GetUserAddress(context, "mHVxHT4VR")
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
 
 	invoice := types.EntityToResponseDTO(updatedInvoice, senderAddress)
 	context.JSON(http.StatusOK, invoice)
@@ -135,7 +157,7 @@ func (g *GinAPIHandler) DeleteHandler(context *gin.Context) {
 	id := context.Param("id")
 
 	err := g.invoices.DeleteInvoice(id)
-	if errors.Is(err, domain.ErrInvoiceNotFound) {
+	if errors.Is(err, utils.ErrInvoiceNotFound) {
 		context.AbortWithStatusJSON(http.StatusNotFound, map[string]string{
 			"message": err.Error(),
 		})

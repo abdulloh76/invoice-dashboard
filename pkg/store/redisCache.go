@@ -60,7 +60,7 @@ func (r *RedisCacheStore) Delete(ctx context.Context, key string) error {
 		return err
 	}
 	if confirmation == 0 {
-		return errors.New("smth went wrong could not remove from redis")
+		return errors.New("something went wrong could not remove from redis")
 	}
 	return nil
 }
