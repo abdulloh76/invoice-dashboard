@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	configs := utils.LoadConfig("./", "dev", "env")
+	configs := utils.LoadConfig("config", "dev", "yml")
 
 	router := gin.Default()
 	router.Use(utils.CORSMiddleware())
