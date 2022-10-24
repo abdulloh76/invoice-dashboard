@@ -13,16 +13,15 @@ import (
 )
 
 func main() {
+	configs := utils.LoadConfig("./", "dev", "env")
+
 	router := gin.Default()
 	router.Use(utils.CORSMiddleware())
 
-	grpcPort := "8081"
-
-	configs := utils.InitializeConfigs()
 	cache := store.NewRedisCacheStore(configs.REDIS_URL, configs.CACHE_EXPIRATION)
-	userGrpcClient := infrastructure.NewUserGrpcClient(grpcPort)
-	postgreDB := store.NewPostgresDBStore(configs.DATABASE_URL)
-	domain := domain.NewInvoicesDomain(postgreDB, cache)
+	userGrpcClient := infrastructure.NewUserGrpcClient(configs.GRPC_PORT)
+	postgresDB := store.NewPostgresDBStore(configs.DATABASE_URL)
+	domain := domain.NewInvoicesDomain(postgresDB, cache)
 	handler := handlers.NewGinAPIHandler(domain, userGrpcClient)
 
 	handlers.RegisterHandlers(router, handler)

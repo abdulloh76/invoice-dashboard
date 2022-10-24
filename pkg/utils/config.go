@@ -1,31 +1,34 @@
 package utils
 
 import (
-	"os"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type ConfigStruct struct {
 	DATABASE_URL     string
 	REDIS_URL        string
 	CACHE_EXPIRATION time.Duration
+	GRPC_PORT        string
 }
 
-func InitializeConfigs() *ConfigStruct {
-	postgresDSN, ok := os.LookupEnv("DATABASE_URL")
-	if !ok {
-		panic("Need DATABASE_URL environment variable")
+func LoadConfig(configPath, configName, configType string) *ConfigStruct {
+	viper.AddConfigPath(configPath)
+	viper.SetConfigName(configName)
+	viper.SetConfigType(configType)
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic("Need environment variables file")
 	}
 
 	var cacheExpireDuration time.Duration = 600
-	redisURL, ok := os.LookupEnv("REDIS_URL")
-	if !ok {
-		panic("Need REDIS_URL environment variable")
-	}
 
 	return &ConfigStruct{
-		DATABASE_URL:     postgresDSN,
-		REDIS_URL:        redisURL,
+		DATABASE_URL:     viper.GetString("DATABASE_URL"),
+		REDIS_URL:        viper.GetString("REDIS_URL"),
+		GRPC_PORT:        viper.GetString("GRPC_PORT"),
 		CACHE_EXPIRATION: cacheExpireDuration,
 	}
 }
