@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
 	"github.com/abdulloh76/invoice-dashboard/pkg/handlers"
 	"github.com/abdulloh76/invoice-dashboard/pkg/infrastructure"
@@ -26,5 +24,5 @@ func main() {
 
 	handlers.RegisterHandlers(router, handler)
 
-	router.Run(":" + os.Getenv("PORT"))
+	router.Run(":" + configs.PORT)
 }
