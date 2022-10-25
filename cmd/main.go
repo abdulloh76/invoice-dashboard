@@ -17,7 +17,8 @@ func main() {
 	router.Use(utils.CORSMiddleware())
 
 	cache := store.NewRedisCacheStore(configs.REDIS_URL, configs.CACHE_EXPIRATION)
-	userGrpcClient := infrastructure.NewUserGrpcClient(configs.GRPC_PORT)
+	grpcTarget := configs.GRPC_HOST + ":" + configs.GRPC_PORT
+	userGrpcClient := infrastructure.NewUserGrpcClient(grpcTarget)
 	postgresDB := store.NewPostgresDBStore(configs.DATABASE_URL)
 	domain := domain.NewInvoicesDomain(postgresDB, cache)
 	handler := handlers.NewGinAPIHandler(domain, userGrpcClient)

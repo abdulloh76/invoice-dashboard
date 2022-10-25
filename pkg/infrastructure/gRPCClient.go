@@ -13,8 +13,8 @@ type UserGrpcClient struct {
 	client userGrpc.UserClient
 }
 
-func NewUserGrpcClient(userGrpcPort string) *UserGrpcClient {
-	conn, err := grpc.Dial(":"+userGrpcPort, grpc.WithInsecure())
+func NewUserGrpcClient(target string) *UserGrpcClient {
+	conn, err := grpc.Dial(target, grpc.WithInsecure())
 
 	if err != nil {
 		panic(err)
