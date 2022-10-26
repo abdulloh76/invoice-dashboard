@@ -6,6 +6,7 @@ go 1.18
 
 require (
 	github.com/aws/aws-lambda-go v1.34.1
+	github.com/awslabs/aws-lambda-go-api-proxy v0.13.3
 	github.com/gin-gonic/gin v1.8.0
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/spf13/viper v1.13.0
@@ -52,9 +53,9 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
+	golang.org/x/net v0.0.0-20220617184016-355a448f1bc9 // indirect
+	golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
