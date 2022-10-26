@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"errors"
-	"github.com/abdulloh76/invoice-dashboard/pkg/utils"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -10,6 +10,9 @@ import (
 	"github.com/abdulloh76/invoice-dashboard/pkg/domain"
 	"github.com/abdulloh76/invoice-dashboard/pkg/infrastructure"
 	"github.com/abdulloh76/invoice-dashboard/pkg/types"
+	"github.com/abdulloh76/invoice-dashboard/pkg/utils"
+
+	"github.com/awslabs/aws-lambda-go-api-proxy/core"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,6 +37,12 @@ func RegisterHandlers(router *gin.Engine, handler *GinAPIHandler) {
 }
 
 func (g *GinAPIHandler) AllHandler(context *gin.Context) {
+	apiGWRequestContext, ok := core.GetAPIGatewayV2ContextFromContext(context.Request.Context())
+	fmt.Println("context request context", context.Request.Context())
+	fmt.Println("apiGWRequestContext.Authorizer.Lambda", apiGWRequestContext.Authorizer.Lambda)
+	fmt.Println("apiGWRequestContext.Authorizer.IAM", apiGWRequestContext.Authorizer.IAM)
+	fmt.Println("apiGWRequestContext.Authorizer.IAM.UserID", apiGWRequestContext.Authorizer.IAM.UserID)
+	fmt.Println("ok got with core aws lambda package", ok)
 	allInvoices, err := g.invoices.AllInvoices()
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, map[string]string{
